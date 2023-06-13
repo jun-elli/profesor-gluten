@@ -7,6 +7,8 @@ using UnityEngine.UI;
 public class ItemPopup : MonoBehaviour
 {
     private GameObject item;
+    [SerializeField] private GameObject levelManagerObj;
+    private LevelManager levelManager;
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private Image itemImage;
     [SerializeField] private bool itemHasGluten;
@@ -14,7 +16,7 @@ public class ItemPopup : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        levelManager = levelManagerObj.GetComponent<LevelManager>();
     }
 
     // Update is called once per frame
@@ -44,12 +46,14 @@ public class ItemPopup : MonoBehaviour
         {
             Debug.Log("You're correct");
             // add point
+            levelManager.SetPoints(1);
             // call dialogue with explanation of why it was correct
         }
         else
         {
             Debug.Log("You're wrong!");
             // subtract life
+            levelManager.SetLives(-1);
             // call dialogue with explanation why it was wrong answer
         }
     }
