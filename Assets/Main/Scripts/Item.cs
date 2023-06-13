@@ -12,7 +12,6 @@ public class Item : MonoBehaviour
     }
     [SerializeField] private GameObject itemPopupUI;
     private ItemPopup popup;
-    [SerializeField] private GameObject popupGroup;
 
     // private reference to dialogue resource here once implemented
 
@@ -29,8 +28,6 @@ public class Item : MonoBehaviour
 
     public void OnMouseDown()
     {
-        Debug.Log("inside mousedown");
-        popupGroup.SetActive(true);
         // transfer item information to pop up, maybe just reference of itself
         popup.ShowInformation(gameObject);
     }
