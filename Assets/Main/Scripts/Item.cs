@@ -10,12 +10,16 @@ public class Item : MonoBehaviour
     {
         get => _hasGluten;
     }
+    [SerializeField] private GameObject itemPopupUI;
+    private ItemPopup popup;
+    [SerializeField] private GameObject popupGroup;
 
     // private reference to dialogue resource here once implemented
 
     // Start is called before the first frame update
     void Start()
     {
+        popup = itemPopupUI.GetComponent<ItemPopup>();
     }
 
     // Update is called once per frame
@@ -23,10 +27,11 @@ public class Item : MonoBehaviour
     {
     }
 
-    private void OnMouseDown()
+    public void OnMouseDown()
     {
-        // call popup window
-        // put dark frame behind
+        Debug.Log("inside mousedown");
+        popupGroup.SetActive(true);
         // transfer item information to pop up, maybe just reference of itself
+        popup.ShowInformation(gameObject);
     }
 }
