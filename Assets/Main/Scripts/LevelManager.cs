@@ -10,17 +10,22 @@ public class LevelManager : MonoBehaviour
     public int Lives { get; private set; }
     [SerializeField] private int levelMaxPoints;
     [SerializeField] private int levelMaxLives;
+
+    // display points and lives
     [SerializeField] private TextMeshProUGUI livesText;
     [SerializeField] private GameObject pointsDisplay;
     private Slider pointsBar;
 
+    // level over popup
+    [SerializeField] private GameObject levelOverPopup;
+    private OverPopup overPopup;
+
     // Start is called before the first frame update
     void Start()
     {
-        Points = 0;
-        Lives = levelMaxLives;
         pointsBar = pointsDisplay.GetComponent<Slider>();
-        pointsBar.maxValue = levelMaxPoints;
+        overPopup = levelOverPopup.GetComponent<OverPopup>();
+        ResetLevel();
     }
 
     public void SetPoints(int pointsToAdd)
@@ -35,8 +40,15 @@ public class LevelManager : MonoBehaviour
         {
             Points = levelMaxPoints;
             // call win
-            Debug.Log("You found all the gluten");
+            overPopup.DisplayPopup(true, Points, levelMaxPoints);
         }
+        pointsBar.value = Points;
+    }
+
+    private void ResetPoints()
+    {
+        Points = 0;
+        pointsBar.maxValue = levelMaxPoints;
         pointsBar.value = Points;
     }
 
@@ -47,7 +59,7 @@ public class LevelManager : MonoBehaviour
         {
             Lives = 0;
             // call game over
-            Debug.Log("Level over");
+            overPopup.DisplayPopup(false, Points, levelMaxPoints);
         }
         if (Lives > levelMaxLives)
         {
@@ -55,5 +67,22 @@ public class LevelManager : MonoBehaviour
             Debug.LogError("can't have more lives");
         }
         livesText.text = "Lives: " + Lives;
+    }
+    private void ResetLives()
+    {
+        Lives = levelMaxLives;
+        livesText.text = "Lives: " + Lives;
+    }
+
+    private void ResetLevel()
+    {
+        ResetPoints();
+        ResetLives();
+        levelOverPopup.SetActive(false);
+    }
+
+    public void ReturnToLevels()
+    {
+        Debug.Log("Level over, return to level selection screen.");
     }
 }
