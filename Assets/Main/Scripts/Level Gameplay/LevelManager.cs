@@ -6,10 +6,15 @@ using TMPro;
 
 public class LevelManager : MonoBehaviour
 {
+    // Level vars
     public int Points { get; private set; }
     public int Lives { get; private set; }
     [SerializeField] private int levelMaxPoints;
     [SerializeField] private int levelMaxLives;
+
+    [SerializeField] private int oneStarPoints;
+    [SerializeField] private int twoStarPoints;
+    [SerializeField] private int threeStarPoints;
 
     // display points and lives
     [SerializeField] private TextMeshProUGUI livesText;
@@ -40,7 +45,7 @@ public class LevelManager : MonoBehaviour
         {
             Points = levelMaxPoints;
             // call win
-            overPopup.DisplayPopup(true, Points, levelMaxPoints);
+            overPopup.DisplayPopup(true, Points, oneStarPoints, twoStarPoints, threeStarPoints);
         }
         pointsBar.value = Points;
     }
@@ -59,7 +64,7 @@ public class LevelManager : MonoBehaviour
         {
             Lives = 0;
             // call game over
-            overPopup.DisplayPopup(false, Points, levelMaxPoints);
+            overPopup.DisplayPopup(false, Points, oneStarPoints, twoStarPoints, threeStarPoints);
         }
         if (Lives > levelMaxLives)
         {

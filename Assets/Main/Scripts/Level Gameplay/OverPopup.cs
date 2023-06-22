@@ -11,6 +11,10 @@ public class OverPopup : MonoBehaviour
     [SerializeField] private GameObject levelManager;
     private LevelManager manager;
 
+    [SerializeField] private GameObject scoreDisplay;
+    private ScoreDisplay display;
+
+
     [SerializeField] private TextMeshProUGUI titleText;
     [SerializeField] private TextMeshProUGUI resultText;
 
@@ -20,15 +24,16 @@ public class OverPopup : MonoBehaviour
     void Start()
     {
         manager = levelManager.GetComponent<LevelManager>();
+        display = scoreDisplay.GetComponent<ScoreDisplay>();
         titleText.text = SceneManager.GetActiveScene().name;
     }
 
-    public void DisplayPopup(bool hasWon, int score, int maxScore)
+    public void DisplayPopup(bool hasWon, int score, int oneStarPoints, int twoStarPoints, int threeStarPoints)
     {
         // set win or lose message
         SetResultMessage(hasWon);
         // show stars
-
+        display.ShowScore(score, oneStarPoints, twoStarPoints, threeStarPoints);
         // set active
         gameObject.SetActive(true);
     }
