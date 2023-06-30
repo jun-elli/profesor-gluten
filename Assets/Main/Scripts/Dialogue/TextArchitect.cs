@@ -115,10 +115,20 @@ public class TextArchitect
     private void OnComplete()
     {
         buildProcess = null;
+        hurryUp = false;
+    }
+
+    public void ForceComplete()
+    {
+        // only implemented for typewriter mode
+        tmpro.maxVisibleCharacters = tmpro.textInfo.characterCount;
+        Stop();
+        OnComplete();
     }
 
     // PREPARE & BUILD ACCORDING TO METHOD
 
+    // Prepare text to be build by Instant method
     private void PrepareInstant()
     {
         tmpro.color = tmpro.color; // reset color, fade would change color on vertices but not change main
@@ -126,12 +136,31 @@ public class TextArchitect
         tmpro.ForceMeshUpdate();
         tmpro.maxVisibleCharacters = tmpro.textInfo.characterCount; // make sure all characters are visible
     }
-    private void PrepareTypewriter() { }
+    private void PrepareTypewriter()
+    {
+        tmpro.color = tmpro.color;
+        tmpro.maxVisibleCharacters = 0;
+        // if there's already text, show it since it's a previous line
+        tmpro.text = PreText;
+        if (PreText != "")
+        {
+            tmpro.ForceMeshUpdate();
+            tmpro.maxVisibleCharacters = tmpro.textInfo.characterCount;
+        }
+        // then add the line we want to build using typewriter
+        tmpro.text += TargetText;
+        tmpro.ForceMeshUpdate();
+    }
     // prepare fade not yet implemented
 
     private IEnumerator BuildTypewriter()
     {
-        yield return null;
+        while (tmpro.maxVisibleCharacters < tmpro.textInfo.characterCount)
+        {
+            tmpro.maxVisibleCharacters += hurryUp ? CharactersPerCycle * 5 : CharactersPerCycle;
+
+            yield return new WaitForSeconds(0.015f / Speed);
+        }
     }
 
     // build fade not yet implemented
