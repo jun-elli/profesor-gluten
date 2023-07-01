@@ -2,34 +2,37 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DialogueSystem : MonoBehaviour
+namespace Dialogue
 {
-
-    public DialogueContainer dialogueContainer = new DialogueContainer();
-
-    public static DialogueSystem Instance;
-
-    private void Awake()
+    public class DialogueSystem : MonoBehaviour
     {
-        if (Instance == null)
+
+        public DialogueContainer dialogueContainer = new DialogueContainer();
+
+        public static DialogueSystem Instance;
+
+        private void Awake()
         {
-            Instance = this;
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+            else
+            {
+                DestroyImmediate(gameObject);
+            }
         }
-        else
+
+        // Start is called before the first frame update
+        void Start()
         {
-            DestroyImmediate(gameObject);
+
         }
-    }
 
-    // Start is called before the first frame update
-    void Start()
-    {
+        // Update is called once per frame
+        void Update()
+        {
 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+        }
     }
 }
