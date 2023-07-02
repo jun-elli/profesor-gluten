@@ -1,5 +1,9 @@
-Profesor "Buenas tardes, celiaques de mi corazón."
+Profesor "Buenas tardes, celiaques de mi corazón." Saluda(mano), Come("Platano de canarias")
 
 "Igualmente profesor."
 
 narradore "Tengo hambre!"
+
+Profesor " Yo tambien \"teno mucha\" hambre."
+
+Saludar(hello, "Giraffe")
