@@ -7,8 +7,7 @@ namespace Dialogue
     public class DialogueContainer
     {
         public GameObject root;
-        public TextMeshProUGUI nameText;
         public TextMeshProUGUI dialogueText;
-
+        public NameContainer nameContainer;
     }
 }

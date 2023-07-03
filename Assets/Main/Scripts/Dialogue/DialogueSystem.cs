@@ -8,8 +8,10 @@ namespace Dialogue
     {
 
         public DialogueContainer dialogueContainer = new DialogueContainer();
-
+        private ConversationManager conversationManager = new ConversationManager();
         public static DialogueSystem Instance;
+
+        public bool isRunningConversation => conversationManager.isRunning;
 
         private void Awake()
         {
@@ -23,16 +25,15 @@ namespace Dialogue
             }
         }
 
-        // Start is called before the first frame update
-        void Start()
+        public void Say(string speaker, string dialogue)
         {
-
+            List<string> conversation = new List<string>() { $"{speaker} \"{dialogue}\"" };
+            Say(conversation);
         }
 
-        // Update is called once per frame
-        void Update()
+        public void Say(List<string> conversation)
         {
-
+            conversationManager.StartConversation(conversation);
         }
     }
 }
