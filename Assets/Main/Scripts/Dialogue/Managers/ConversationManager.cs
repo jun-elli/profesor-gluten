@@ -9,7 +9,23 @@ namespace Dialogue
         private DialogueSystem dialogueSystem => DialogueSystem.Instance;
         private Coroutine process = null;
         public bool isRunning => process != null;
+        private TextArchitect _architect = null;
 
+        // Has user prompt to advance to next line
+        private bool hasUserPrompt = false;
+
+        public ConversationManager(TextArchitect architect)
+        {
+            this._architect = architect;
+            dialogueSystem.onUserPromptAdvance += OnUserPromptAdvance;
+        }
+
+        private void OnUserPromptAdvance()
+        {
+            hasUserPrompt = true;
+        }
+
+        // Make sure previous conversation is over and then start new one
         public void StartConversation(List<string> conversation)
         {
             StopConversation();
@@ -52,15 +68,54 @@ namespace Dialogue
         }
         IEnumerator RunDialogue(DialogueLine line)
         {
+            // Show name tag or not
             if (line.hasSpeaker)
             {
-
+                dialogueSystem.ShowSpeakerName(line.speaker);
             }
-            yield return null;
+            else
+            {
+                dialogueSystem.HideSpeakerName();
+            }
+
+            // Build dialogue line
+            yield return BuildDialogueLine(line.dialogue);
+
+            // Wait for user input
+            yield return WaitForUserInput();
         }
         IEnumerator RunCommands(DialogueLine line)
         {
+            Debug.Log(line.commands);
             yield return null;
+        }
+
+        IEnumerator BuildDialogueLine(string dialogue)
+        {
+            _architect.Build(dialogue);
+
+            while (_architect.isBuilding)
+            {
+                if (!_architect.hurryUp)
+                {
+                    _architect.hurryUp = true;
+                }
+                else
+                {
+                    _architect.ForceComplete();
+                }
+                hasUserPrompt = false;
+                yield return null;
+            }
+        }
+
+        IEnumerator WaitForUserInput()
+        {
+            while (!hasUserPrompt)
+            {
+                yield return null;
+            }
+            hasUserPrompt = false;
         }
     }
 }

@@ -8,23 +8,62 @@ namespace Dialogue
     {
 
         public DialogueContainer dialogueContainer = new DialogueContainer();
-        private ConversationManager conversationManager = new ConversationManager();
+        private ConversationManager _conversationManager;
+        private TextArchitect _architect;
+        private bool _isInitialized = false;
         public static DialogueSystem Instance;
+        public bool isRunningConversation => _conversationManager.isRunning;
 
-        public bool isRunningConversation => conversationManager.isRunning;
+        // Manage user prompt to hurry up or go to next dialogue line
+        public delegate void DialogueSystemEvent();
+        public event DialogueSystemEvent onUserPromptAdvance;
 
         private void Awake()
         {
             if (Instance == null)
             {
                 Instance = this;
+                Initialize();
             }
             else
             {
                 DestroyImmediate(gameObject);
             }
         }
+        // Initialize text architect, only one instance
+        private void Initialize()
+        {
+            if (_isInitialized)
+            {
+                return;
+            }
+            _architect = new TextArchitect(dialogueContainer.dialogueText);
+            _conversationManager = new ConversationManager(_architect);
+            _isInitialized = true;
+        }
 
+        // Run methods subscribed to delegate event (if not null)
+        public void OnUserPromptAdvance()
+        {
+            onUserPromptAdvance?.Invoke();
+        }
+
+        // Manage name tag visibility
+        public void ShowSpeakerName(string speaker)
+        {
+            if (speaker.ToUpper() != "NARRATOR")
+            {
+                dialogueContainer.nameContainer.Show(speaker);
+            }
+            else
+            {
+                HideSpeakerName();
+            }
+        }
+        public void HideSpeakerName() => dialogueContainer.nameContainer.Hide();
+
+
+        // Send conversation to conManager
         public void Say(string speaker, string dialogue)
         {
             List<string> conversation = new List<string>() { $"{speaker} \"{dialogue}\"" };
@@ -33,7 +72,7 @@ namespace Dialogue
 
         public void Say(List<string> conversation)
         {
-            conversationManager.StartConversation(conversation);
+            _conversationManager.StartConversation(conversation);
         }
     }
 }
