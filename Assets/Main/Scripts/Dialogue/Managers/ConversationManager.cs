@@ -79,7 +79,7 @@ namespace Dialogue
             }
 
             // Build dialogue line
-            yield return BuildDialogueLine(line.dialogue);
+            yield return BuildLineSegments(line.dialogue);
 
             // Wait for user input
             yield return WaitForUserInput();
@@ -90,10 +90,49 @@ namespace Dialogue
             yield return null;
         }
 
-        IEnumerator BuildDialogueLine(string dialogue)
+        // Build all segments of a dialogue line
+        IEnumerator BuildLineSegments(DL_Text line)
         {
-            _architect.Build(dialogue);
+            Debug.Log("Inside ConversationManager: BuildLineSegments");
+            for (int i = 0; i < line.segments.Count; i++)
+            {
+                DL_Text.Segment segment = line.segments[i];
 
+                yield return WaitForSegmentSignalToBeTriggered(segment);
+                yield return BuildDialogueText(segment.text, segment.shouldAppend);
+            }
+        }
+
+        IEnumerator WaitForSegmentSignalToBeTriggered(DL_Text.Segment segment)
+        {
+            switch (segment.signal)
+            {
+                case DL_Text.Segment.StartSignal.C:
+                case DL_Text.Segment.StartSignal.A:
+                    yield return WaitForUserInput();
+                    break;
+                case DL_Text.Segment.StartSignal.WC:
+                case DL_Text.Segment.StartSignal.WA:
+                    yield return new WaitForSeconds(segment.signalDelay);
+                    break;
+                default:
+                    break;
+            }
+        }
+        // Send text to architect
+        IEnumerator BuildDialogueText(string text, bool append = false)
+        {
+            // Build text in architect
+            if (!append)
+            {
+                _architect.Build(text);
+            }
+            else
+            {
+                _architect.Append(text);
+            }
+
+            // Wait for text to complete
             while (_architect.isBuilding)
             {
                 if (!_architect.hurryUp)

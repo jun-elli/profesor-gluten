@@ -17,8 +17,8 @@ namespace Dialogue
 
         public static DialogueLine Parse(string rawLine)
         {
-            Debug.Log($"Parsing line: {rawLine}");
-
+            // Debug.Log($"Parsing line: {rawLine}");
+            Debug.Log("Inside ConversationManager: Parse()");
             (string speaker, string dialogue, string commands) = RipContent(rawLine);
             return new DialogueLine(speaker, dialogue, commands);
         }
@@ -97,7 +97,7 @@ namespace Dialogue
             {
                 speaker = rawLine;
             }
-            Debug.Log($"Speaker: {speaker}, \nDialogue: {dialogue}, \nCommand: {commands}");
+            // Debug.Log($"Speaker: {speaker}, \nDialogue: {dialogue}, \nCommand: {commands}");
             return (speaker, dialogue, commands);
         }
     }
