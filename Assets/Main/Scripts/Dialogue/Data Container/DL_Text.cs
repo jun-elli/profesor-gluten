@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Globalization;
 using UnityEngine;
 
 namespace Dialogue
@@ -57,7 +58,7 @@ namespace Dialogue
                 // Get delay //
                 if (signalAndDelay.Length > 1)
                 {
-                    float.TryParse(signalAndDelay[1], out segment.signalDelay);
+                    float.TryParse(signalAndDelay[1], NumberStyles.Any, new CultureInfo("en-US"), out segment.signalDelay);
                 }
 
                 // Get text segment //
