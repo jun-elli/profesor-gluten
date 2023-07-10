@@ -13,12 +13,10 @@ namespace Dialogue
         // [^XXX] - don't match any of the XXX characters
         // \s - white space
         // \( - parenthesis
-        private const string CommandsRegexPattern = "\\w*[^\\s]\\(";
+        private const string CommandsRegexPattern = @"\w*[^\s]\(";
 
         public static DialogueLine Parse(string rawLine)
         {
-            // Debug.Log($"Parsing line: {rawLine}");
-            Debug.Log("Inside ConversationManager: Parse()");
             (string speaker, string dialogue, string commands) = RipContent(rawLine);
             return new DialogueLine(speaker, dialogue, commands);
         }

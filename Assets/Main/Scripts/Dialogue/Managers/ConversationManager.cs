@@ -71,7 +71,7 @@ namespace Dialogue
             // Show name tag or not
             if (line.hasSpeaker)
             {
-                dialogueSystem.ShowSpeakerName(line.speaker);
+                dialogueSystem.ShowSpeakerName(line.speaker.displayName);
             }
             else
             {
@@ -93,7 +93,6 @@ namespace Dialogue
         // Build all segments of a dialogue line
         IEnumerator BuildLineSegments(DL_Text line)
         {
-            Debug.Log("Inside ConversationManager: BuildLineSegments");
             for (int i = 0; i < line.segments.Count; i++)
             {
                 DL_Text.Segment segment = line.segments[i];
