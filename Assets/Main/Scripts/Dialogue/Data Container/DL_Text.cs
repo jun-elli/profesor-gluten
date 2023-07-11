@@ -11,7 +11,6 @@ namespace Dialogue
     {
         public List<Segment> segments;
         private const string SegmentPattern = @"\{[ca]\}|\{w[ca]\s\d*\.?\d*\}";
-        public bool hasDialogue => segments.Count > 0;
 
         // Constructor
         public DL_Text(string rawDialogue)

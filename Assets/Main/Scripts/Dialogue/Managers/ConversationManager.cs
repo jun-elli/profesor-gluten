@@ -71,7 +71,7 @@ namespace Dialogue
             // Show name tag or not
             if (line.hasSpeaker)
             {
-                dialogueSystem.ShowSpeakerName(line.speaker.displayName);
+                dialogueSystem.ShowSpeakerName(line.speakerData.displayName);
             }
             else
             {
@@ -79,14 +79,14 @@ namespace Dialogue
             }
 
             // Build dialogue line
-            yield return BuildLineSegments(line.dialogue);
+            yield return BuildLineSegments(line.dialogueData);
 
             // Wait for user input
             yield return WaitForUserInput();
         }
         IEnumerator RunCommands(DialogueLine line)
         {
-            Debug.Log(line.commands);
+            // Debug.Log(line.commandsData);
             yield return null;
         }
 
