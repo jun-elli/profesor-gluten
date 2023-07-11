@@ -4,18 +4,8 @@ using UnityEngine;
 
 namespace Dialogue
 {
-    public class CMD_DatabaseExtension : MonoBehaviour
+    public abstract class CMD_DatabaseExtension
     {
-        // Start is called before the first frame update
-        void Start()
-        {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
+        public static void Extend(CommandsDatabase database) { }
     }
 }
