@@ -4,83 +4,86 @@ using System.Globalization;
 using System.Linq;
 using UnityEngine;
 
-public class DL_Speaker
+namespace Dialogue
 {
-    // name -> name that we write in text assets when saying who is speaking
-    // castName -> name that will apear in nametag box
-    public string name, castName;
-    public string displayName => castName != string.Empty ? castName : name;
-    public Vector2 castPosition;
-    public List<(int layer, string expression)> CastExpressions { get; set; }
-    private const string CastNameID = " as ";
-    private const string CastPositionID = " at ";
-    private const string CastExpressionID = " [";
-    private const char AxisDelimiter = ':';
-    private const char LayerJoin = ',';
-    private const char LayerDelimiter = ':';
-
-    public DL_Speaker(string rawSpeaker)
+    public class DL_Speaker
     {
-        string pattern = @$"{CastNameID}|{CastPositionID}|{CastExpressionID.Insert(CastExpressionID.Length - 1, @"\")}";
-        MatchCollection matches = Regex.Matches(rawSpeaker, pattern);
+        // name -> name that we write in text assets when saying who is speaking
+        // castName -> name that will apear in nametag box
+        public string name, castName;
+        public string displayName => castName != string.Empty ? castName : name;
+        public Vector2 castPosition;
+        public List<(int layer, string expression)> CastExpressions { get; set; }
+        private const string CastNameID = " as ";
+        private const string CastPositionID = " at ";
+        private const string CastExpressionID = " [";
+        private const char AxisDelimiter = ':';
+        private const char LayerJoin = ',';
+        private const char LayerDelimiter = ':';
 
-        // Populate with empty values to avoid NullPointExceptions
-        castName = "";
-        castPosition = Vector2.zero;
-        CastExpressions = new List<(int layer, string expression)>();
-
-        // Casting is optional, if there is none, name is speaker
-        if (matches.Count < 1)
+        public DL_Speaker(string rawSpeaker)
         {
-            name = rawSpeaker;
-            return;
-        }
-        // Find speaker name
-        int index = matches[0].Index;
-        name = rawSpeaker.Substring(0, index);
+            string pattern = @$"{CastNameID}|{CastPositionID}|{CastExpressionID.Insert(CastExpressionID.Length - 1, @"\")}";
+            MatchCollection matches = Regex.Matches(rawSpeaker, pattern);
 
-        // Find casting data
-        for (int i = 0; i < matches.Count; i++)
-        {
-            Match match = matches[i];
-            int startIndex = 0, endIndex = 0;
+            // Populate with empty values to avoid NullPointExceptions
+            castName = "";
+            castPosition = Vector2.zero;
+            CastExpressions = new List<(int layer, string expression)>();
 
-            // Find casting name
-            if (match.Value == CastNameID)
+            // Casting is optional, if there is none, name is speaker
+            if (matches.Count < 1)
             {
-                startIndex = match.Index + CastNameID.Length;
-                endIndex = i < matches.Count - 1 ? matches[i + 1].Index : rawSpeaker.Length;
-
-                castName = rawSpeaker.Substring(startIndex, endIndex - startIndex);
+                name = rawSpeaker;
+                return;
             }
-            // Find casting position
-            else if (match.Value == CastPositionID)
-            {
-                startIndex = match.Index + CastPositionID.Length;
-                endIndex = i < matches.Count - 1 ? matches[i + 1].Index : rawSpeaker.Length;
-                string pos = rawSpeaker.Substring(startIndex, endIndex - startIndex);
+            // Find speaker name
+            int index = matches[0].Index;
+            name = rawSpeaker.Substring(0, index);
 
-                // Find x and y, if any
-                string[] axis = pos.Split(AxisDelimiter, System.StringSplitOptions.RemoveEmptyEntries);
-                float.TryParse(axis[0], NumberStyles.Float, new CultureInfo("en-US"), out castPosition.x);
-                if (axis.Length > 1)
+            // Find casting data
+            for (int i = 0; i < matches.Count; i++)
+            {
+                Match match = matches[i];
+                int startIndex = 0, endIndex = 0;
+
+                // Find casting name
+                if (match.Value == CastNameID)
                 {
-                    float.TryParse(axis[1], NumberStyles.Float, new CultureInfo("en-US"), out castPosition.y);
-                }
-            }
-            // Find casting expressions
-            else if (match.Value == CastExpressionID)
-            {
-                startIndex = match.Index + CastExpressionID.Length;
-                endIndex = i < matches.Count - 1 ? matches[i + 1].Index : rawSpeaker.Length;
-                string expressions = rawSpeaker.Substring(startIndex, endIndex - (startIndex + 1));
+                    startIndex = match.Index + CastNameID.Length;
+                    endIndex = i < matches.Count - 1 ? matches[i + 1].Index : rawSpeaker.Length;
 
-                CastExpressions = expressions.Split(LayerJoin)
-                    .Select(x =>
+                    castName = rawSpeaker.Substring(startIndex, endIndex - startIndex);
+                }
+                // Find casting position
+                else if (match.Value == CastPositionID)
+                {
+                    startIndex = match.Index + CastPositionID.Length;
+                    endIndex = i < matches.Count - 1 ? matches[i + 1].Index : rawSpeaker.Length;
+                    string pos = rawSpeaker.Substring(startIndex, endIndex - startIndex);
+
+                    // Find x and y, if any
+                    string[] axis = pos.Split(AxisDelimiter, System.StringSplitOptions.RemoveEmptyEntries);
+                    float.TryParse(axis[0], NumberStyles.Float, new CultureInfo("en-US"), out castPosition.x);
+                    if (axis.Length > 1)
                     {
-                        var parts = x.Trim().Split(LayerDelimiter);
-                        return (int.Parse(parts[0]), parts[1]);
-                    }).ToList();
+                        float.TryParse(axis[1], NumberStyles.Float, new CultureInfo("en-US"), out castPosition.y);
+                    }
+                }
+                // Find casting expressions
+                else if (match.Value == CastExpressionID)
+                {
+                    startIndex = match.Index + CastExpressionID.Length;
+                    endIndex = i < matches.Count - 1 ? matches[i + 1].Index : rawSpeaker.Length;
+                    string expressions = rawSpeaker.Substring(startIndex, endIndex - (startIndex + 1));
+
+                    CastExpressions = expressions.Split(LayerJoin)
+                        .Select(x =>
+                        {
+                            var parts = x.Trim().Split(LayerDelimiter);
+                            return (int.Parse(parts[0]), parts[1]);
+                        }).ToList();
+                }
             }
         }
     }
