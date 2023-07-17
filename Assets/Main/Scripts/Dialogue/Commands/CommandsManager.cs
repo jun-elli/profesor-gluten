@@ -15,6 +15,8 @@ namespace Dialogue
     {
         // We make it a singleton
         public static CommandsManager Instance { get; private set; }
+        private Coroutine currentProcess = null;
+        private bool isProcessRunning => currentProcess != null;
         private CommandsDatabase database;
 
         private void Awake()
@@ -44,12 +46,64 @@ namespace Dialogue
             }
         }
 
-        public void Execute(string commandName)
+        public Coroutine Execute(string commandName, params string[] args)
         {
             Delegate command = database.GetCommand(commandName);
-            if (command != null)
+            // Guard to check if we have a command
+            if (command == null)
+            {
+                return null;
+            }
+            return StartProcess(commandName, command, args);
+        }
+
+        private Coroutine StartProcess(string commandName, Delegate command, string[] args)
+        {
+            StopCurrentProcess();
+
+            currentProcess = StartCoroutine(RunningProcess(command, args));
+            return currentProcess;
+        }
+
+        private void StopCurrentProcess()
+        {
+            if (currentProcess != null)
+            {
+                StopCoroutine(currentProcess);
+            }
+            currentProcess = null;
+        }
+        private IEnumerator RunningProcess(Delegate command, string[] args)
+        {
+            yield return WaitingForProcessCompletion(command, args);
+            currentProcess = null;
+        }
+
+        private IEnumerator WaitingForProcessCompletion(Delegate command, string[] args)
+        {
+            if (command is Action)
             {
                 command.DynamicInvoke();
+            }
+            else if (command is Action<string>)
+            {
+                command.DynamicInvoke(args[0]);
+            }
+            else if (command is Action<string[]>)
+            {
+                command.DynamicInvoke((object)args);
+            }
+            else if (command is Func<IEnumerator>)
+            {   // We cast it as Func type and run the command
+                yield return ((Func<IEnumerator>)command)();
+            }
+            else if (command is Func<string, IEnumerator>)
+            {
+                yield return ((Func<string, IEnumerator>)command)(args[0]);
+            }
+            else if (command is Func<string[], IEnumerator>)
+            {
+                yield return ((Func<string[], IEnumerator>)command)(args);
             }
         }
     }
