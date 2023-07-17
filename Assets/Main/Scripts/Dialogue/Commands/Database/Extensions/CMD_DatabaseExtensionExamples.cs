@@ -24,6 +24,10 @@ public class CMD_DatabaseExtensionExamples : CMD_DatabaseExtension
         database.AddCommand("SimpleProcess", new Func<IEnumerator>(SimpleProcess));
         database.AddCommand("SimpleProcessWithParam", new Func<string, IEnumerator>(SimpleProcessWithParam));
         database.AddCommand("SimpleProcessWithMultipleParam", new Func<string[], IEnumerator>(SimpleProcessWithMultipleParam));
+
+        // Move example
+        database.AddCommand("MoveCharacter", new Func<string, IEnumerator>(MoveCharacter));
+
     }
 
     private static void PrintDefaultMessage()
@@ -73,5 +77,32 @@ public class CMD_DatabaseExtensionExamples : CMD_DatabaseExtension
             Debug.Log($"MyLines: {line}");
             yield return new WaitForSeconds(0.7f);
         }
+    }
+
+    private static IEnumerator MoveCharacter(string direction)
+    {
+        bool isLeft = direction.ToLower() == "left";
+        float moveSpeed = 500f;
+
+        // Get image transform. Should be defined somewhere else. For now, it works.
+        Transform character = GameObject.Find("Frogo").transform;
+        // Local
+        Debug.Log($"Local position is x: {character.localPosition.x}, y: {character.localPosition.y}, z: {character.localPosition.z}");
+
+        // Calculate target direction
+        float targetX = isLeft ? -350f : 350f;
+
+        // Calculate current position
+        float currentX = character.localPosition.x;
+
+        while (Mathf.Abs(targetX - currentX) > 0.1f)
+        {
+            Debug.Log($"Character is moving to the {(isLeft ? "left" : "right")}: current {currentX} / target {targetX}");
+            currentX = Mathf.MoveTowards(currentX, targetX, moveSpeed * Time.deltaTime);
+            character.localPosition = new Vector3(currentX, character.localPosition.y, character.localPosition.z);
+            yield return null;
+        }
+
+
     }
 }
