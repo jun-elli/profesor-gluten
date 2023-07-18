@@ -13,7 +13,7 @@ namespace Dialogue
         // [^XXX] - don't match any of the XXX characters
         // \s - white space
         // \( - parenthesis
-        private const string CommandsRegexPattern = @"\w*[^\s]\(";
+        private const string CommandsRegexPattern = @"[\w\[\]]*[^\s]\(";
 
         public static DialogueLine Parse(string rawLine)
         {

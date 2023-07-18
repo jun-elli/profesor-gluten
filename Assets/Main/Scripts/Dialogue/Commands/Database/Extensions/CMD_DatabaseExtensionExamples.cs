@@ -87,17 +87,17 @@ public class CMD_DatabaseExtensionExamples : CMD_DatabaseExtension
         // Get image transform. Should be defined somewhere else. For now, it works.
         Transform character = GameObject.Find("Frogo").transform;
         // Local
-        Debug.Log($"Local position is x: {character.localPosition.x}, y: {character.localPosition.y}, z: {character.localPosition.z}");
+        // Debug.Log($"Local position is x: {character.localPosition.x}, y: {character.localPosition.y}, z: {character.localPosition.z}");
 
         // Calculate target direction
-        float targetX = isLeft ? -350f : 350f;
+        float targetX = isLeft ? -300f : 300f;
 
         // Calculate current position
         float currentX = character.localPosition.x;
 
         while (Mathf.Abs(targetX - currentX) > 0.1f)
         {
-            Debug.Log($"Character is moving to the {(isLeft ? "left" : "right")}: current {currentX} / target {targetX}");
+            // Debug.Log($"Character is moving to the {(isLeft ? "left" : "right")}: current {currentX} / target {targetX}");
             currentX = Mathf.MoveTowards(currentX, targetX, moveSpeed * Time.deltaTime);
             character.localPosition = new Vector3(currentX, character.localPosition.y, character.localPosition.z);
             yield return null;

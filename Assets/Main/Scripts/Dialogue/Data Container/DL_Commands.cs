@@ -10,10 +10,12 @@ namespace Dialogue
         public List<Command> commands;
         private const char CommandSplitterID = ',';
         private const char ArgumentsContainerID = '(';
+        private const string WaitCommandID = "[wait]";
         public struct Command
         {
             public string name;
             public string[] arguments;
+            public bool isWaiting;
         }
 
         public DL_Commands(string rawCommands)
@@ -28,15 +30,23 @@ namespace Dialogue
 
             foreach (string line in data)
             {
-                Debug.Log($"Command line: {line}");
                 Command command = new Command();
                 int index = line.IndexOf(ArgumentsContainerID);
 
                 command.name = line.Substring(0, index).Trim();
+                if (command.name.ToLower().StartsWith(WaitCommandID))
+                {
+                    command.name = command.name.Substring(WaitCommandID.Length);
+                    command.isWaiting = true;
+                }
+                else
+                {
+                    command.isWaiting = false;
+                }
+
                 string args = line.Substring(index + 1, line.Length - index - 2);
                 command.arguments = GetArguments(args);
                 result.Add(command);
-                Debug.Log($"Command name: {command.name}, Args: {string.Join(", ", command.arguments)}");
             }
             return result;
         }

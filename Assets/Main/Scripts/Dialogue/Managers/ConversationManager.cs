@@ -64,6 +64,12 @@ namespace Dialogue
                 {
                     yield return RunCommands(line);
                 }
+
+                if (line.hasDialogue)
+                {
+                    // Wait for user input
+                    yield return WaitForUserInput();
+                }
             }
         }
         IEnumerator RunDialogue(DialogueLine line)
@@ -80,13 +86,22 @@ namespace Dialogue
 
             // Build dialogue line
             yield return BuildLineSegments(line.dialogueData);
-
-            // Wait for user input
-            yield return WaitForUserInput();
         }
         IEnumerator RunCommands(DialogueLine line)
         {
-            // Debug.Log(line.commandsData);
+            List<DL_Commands.Command> commands = line.commandsData.commands;
+
+            foreach (DL_Commands.Command command in commands)
+            {
+                if (command.isWaiting)
+                {
+                    yield return CommandsManager.Instance.Execute(command.name, command.arguments);
+                }
+                else
+                {
+                    CommandsManager.Instance.Execute(command.name, command.arguments);
+                }
+            }
             yield return null;
         }
 
