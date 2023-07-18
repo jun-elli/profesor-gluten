@@ -57,20 +57,26 @@ namespace Dialogue
             // FIND COMMAND AND SPEAKER
 
             Regex commandRegex = new Regex(CommandsRegexPattern);
-            Match match = commandRegex.Match(rawLine);
+            MatchCollection matches = commandRegex.Matches(rawLine);
 
             // Find command start index if any
             int commandStart = -1;
-            if (match.Success)
-            {
-                commandStart = match.Index;
 
-                // if we have not found dialogue, return only command as it is all the line
-                if (dialogueStart == -1 && dialogueEnd == -1)
+            foreach (Match match in matches)
+            {
+                // Dialogue start must be pointing to command arguments in comas, that's why command could appear before
+                if (match.Index < dialogueStart || match.Index > dialogueEnd)
                 {
-                    return ("", "", rawLine.Trim());
+                    commandStart = match.Index;
+                    break;
                 }
             }
+            // if we have not found dialogue, return only command as it is all the line
+            if (commandStart != -1 && dialogueStart == -1 && dialogueEnd == -1)
+            {
+                return ("", "", rawLine.Trim());
+            }
+
             // check each case
 
             // if we have indexes for dialogue, 
@@ -93,7 +99,7 @@ namespace Dialogue
             }
             else
             {
-                speaker = rawLine;
+                dialogue = rawLine;
             }
             // Debug.Log($"Speaker: {speaker}, \nDialogue: {dialogue}, \nCommand: {commands}");
             return (speaker, dialogue, commands);
