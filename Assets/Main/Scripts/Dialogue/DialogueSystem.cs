@@ -55,10 +55,12 @@ namespace Dialogue
         {
             if (speaker.ToUpper() != "NARRATOR")
             {
+                Debug.Log("Inside ShowSpeakerName -> if not narrator");
                 dialogueContainer.nameContainer.Show(speaker);
             }
             else
             {
+                Debug.Log("Inside ShowSpeakerName -> hide");
                 HideSpeakerName();
             }
         }
@@ -66,15 +68,15 @@ namespace Dialogue
 
 
         // Send conversation to conManager
-        public void Say(string speaker, string dialogue)
+        public Coroutine Say(string speaker, string dialogue)
         {
             List<string> conversation = new List<string>() { $"{speaker} \"{dialogue}\"" };
-            Say(conversation);
+            return Say(conversation);
         }
 
-        public void Say(List<string> conversation)
+        public Coroutine Say(List<string> conversation)
         {
-            _conversationManager.StartConversation(conversation);
+            return _conversationManager.StartConversation(conversation);
         }
     }
 }

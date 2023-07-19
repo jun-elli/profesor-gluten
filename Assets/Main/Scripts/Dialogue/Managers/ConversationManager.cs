@@ -26,10 +26,11 @@ namespace Dialogue
         }
 
         // Make sure previous conversation is over and then start new one
-        public void StartConversation(List<string> conversation)
+        public Coroutine StartConversation(List<string> conversation)
         {
             StopConversation();
             process = dialogueSystem.StartCoroutine(RunningConversation(conversation));
+            return process;
         }
 
         private void StopConversation()

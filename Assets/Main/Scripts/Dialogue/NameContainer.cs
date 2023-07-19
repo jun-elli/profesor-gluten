@@ -22,6 +22,7 @@ namespace Dialogue
             if (nameToShow != string.Empty)
             {
                 nameText.text = nameToShow;
+                Debug.Log($"Active in hierarchy?: {root.activeInHierarchy}");
             }
         }
 
