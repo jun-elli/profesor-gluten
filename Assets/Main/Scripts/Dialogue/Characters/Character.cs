@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 namespace Dialogue.Characters
 {
@@ -13,6 +14,9 @@ namespace Dialogue.Characters
 
         private DialogueSystem _dialogueSystem => DialogueSystem.Instance;
 
+        public enum CharacterType { Text, Sprite, SpriteSheet, Live2D, Model3D }
+
+        // Constructor
         public Character(string name, CharacterConfigData config)
         {
             this.name = name;
@@ -21,9 +25,7 @@ namespace Dialogue.Characters
         }
 
         public Coroutine Say(string line) => Say(new List<string> { line });
-        // {
-        //     return _dialogueSystem.Say(displayName, line);
-        // }
+
         public Coroutine Say(List<string> dialogue)
         {
             List<string> conversation = new List<string>();
@@ -33,10 +35,17 @@ namespace Dialogue.Characters
                 conversation.Add($"{displayName} \"{line}\"");
             }
             _dialogueSystem.ShowSpeakerName(displayName);
-            _dialogueSystem.ApplySpeakerDataToDialogueContainer(name);
+            UpdateTextCostumizationOnScreen();
             return _dialogueSystem.Say(conversation);
         }
 
-        public enum CharacterType { Text, Sprite, SpriteSheet, Live2D, Model3D }
+        public void SetDialogueColor(Color color) => config.dialogueColor = color;
+        public void SetNameColor(Color color) => config.nameColor = color;
+
+        public void SetDialogueFont(TMP_FontAsset font) => config.dialogueFont = font;
+        public void SetNameFont(TMP_FontAsset font) => config.nameFont = font;
+
+        public void UpdateTextCostumizationOnScreen() => _dialogueSystem.ApplySpeakerDataToDialogueContainer(config);
+        public void ResetConfigurationData() => config = CharacterManager.Instance.GetCharacterConfig(name);
     }
 }
