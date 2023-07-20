@@ -61,18 +61,38 @@ namespace Dialogue.Characters
             switch (config.characterType)
             {
                 case Character.CharacterType.Text:
-                    return new CharacterText(info.name);
+                    return new CharacterText(info.name, config);
                 case Character.CharacterType.Sprite:
                 case Character.CharacterType.SpriteSheet:
-                    return new CharacterSprite(info.name);
+                    return new CharacterSprite(info.name, config);
                 case Character.CharacterType.Live2D:
-                    return new CharacterLive2D(info.name);
+                    return new CharacterLive2D(info.name, config);
                 case Character.CharacterType.Model3D:
-                    return new CharacterModel3D(info.name);
+                    return new CharacterModel3D(info.name, config);
                 default:
                     Debug.LogError("Wrong character type. Can't create new character.");
                     return null;
             }
+        }
+
+        public Character GetCharacter(string characterName, bool shouldCreateIfDoesNotExist = false)
+        {
+            string lowName = characterName.ToLower();
+            if (characters.ContainsKey(lowName))
+            {
+                return characters[lowName];
+            }
+            else if (shouldCreateIfDoesNotExist)
+            {
+                return CreateCharacter(lowName);
+            }
+
+            return null;
+        }
+
+        public CharacterConfigData GetCharacterConfig(string characterName)
+        {
+            return config.GetConfig(characterName);
         }
 
         // Class to store character data: name and config

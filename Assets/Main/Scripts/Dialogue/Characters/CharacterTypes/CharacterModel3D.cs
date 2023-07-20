@@ -6,7 +6,7 @@ namespace Dialogue.Characters
 {
     public class CharacterModel3D : Character
     {
-        public CharacterModel3D(string name) : base(name)
+        public CharacterModel3D(string name, CharacterConfigData config) : base(name, config)
         {
             Debug.Log($"Character Model3D created: {name}");
         }

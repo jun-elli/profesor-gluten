@@ -9,15 +9,16 @@ namespace Dialogue.Characters
         public string name = "";
         public string displayName = "";
         public RectTransform transform = null;
+        public CharacterConfigData config;
 
         private DialogueSystem _dialogueSystem => DialogueSystem.Instance;
 
-        public Character(string name)
+        public Character(string name, CharacterConfigData config)
         {
             this.name = name;
             displayName = name;
+            this.config = config;
         }
-
 
         public Coroutine Say(string line) => Say(new List<string> { line });
         // {
@@ -32,6 +33,7 @@ namespace Dialogue.Characters
                 conversation.Add($"{displayName} \"{line}\"");
             }
             _dialogueSystem.ShowSpeakerName(displayName);
+            _dialogueSystem.ApplySpeakerDataToDialogueContainer(name);
             return _dialogueSystem.Say(conversation);
         }
 

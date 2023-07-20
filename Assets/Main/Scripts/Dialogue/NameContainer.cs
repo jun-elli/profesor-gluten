@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Dialogue.Characters;
 
 
 namespace Dialogue
@@ -30,5 +31,15 @@ namespace Dialogue
         {
             root.SetActive(false);
         }
+
+        void SetNameColor(Color color) => nameText.color = color;
+        void SetNameFont(TMP_FontAsset font) => nameText.font = font;
+
+        public void SetConfig(CharacterConfigData config)
+        {
+            SetNameColor(config.nameColor);
+            SetNameFont(config.nameFont);
+        }
+
     }
 }

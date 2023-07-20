@@ -16,21 +16,21 @@ MonoBehaviour:
   - name: Profesor
     alias: P
     characterType: 1
-    nameColor: {r: 0.123398006, g: 0.5566038, b: 0.14548297, a: 0}
-    dialogueColor: {r: 0, g: 0, b: 0, a: 0}
-    nameFont: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
-    dialogueFont: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
+    nameColor: {r: 0.123398006, g: 0.5566038, b: 0.14548297, a: 1}
+    dialogueColor: {r: 0, g: 0, b: 0, a: 1}
+    nameFont: {fileID: 11400000, guid: 303e24d152704b8afb7068cdf8daff5f, type: 2}
+    dialogueFont: {fileID: 11400000, guid: 532aaa78513b1664c8903239fffde48f, type: 2}
   - name: Luca
     alias: L
     characterType: 2
-    nameColor: {r: 0, g: 0.103292756, b: 0.5188679, a: 0}
-    dialogueColor: {r: 0, g: 0, b: 0, a: 0}
-    nameFont: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-    dialogueFont: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
+    nameColor: {r: 0, g: 0.103292756, b: 0.5188679, a: 1}
+    dialogueColor: {r: 0, g: 0, b: 0, a: 1}
+    nameFont: {fileID: 11400000, guid: 303e24d152704b8afb7068cdf8daff5f, type: 2}
+    dialogueFont: {fileID: 11400000, guid: 532aaa78513b1664c8903239fffde48f, type: 2}
   - name: Jun
     alias: J
     characterType: 0
-    nameColor: {r: 0.6509434, g: 0, b: 0.16285597, a: 0}
-    dialogueColor: {r: 0.3679245, g: 0.28982732, b: 0.28982732, a: 0}
+    nameColor: {r: 0.6509434, g: 0, b: 0.16285597, a: 1}
+    dialogueColor: {r: 0.3679245, g: 0.28982732, b: 0.28982732, a: 1}
     nameFont: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
     dialogueFont: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}

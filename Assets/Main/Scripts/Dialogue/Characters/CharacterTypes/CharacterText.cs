@@ -6,9 +6,9 @@ namespace Dialogue.Characters
 {
     public class CharacterText : Character
     {
-        public CharacterText(string name) : base(name)
+        public CharacterText(string name, CharacterConfigData config) : base(name, config)
         {
-            Debug.Log($"Character Text created: {name}");
+            Debug.Log($"Character text created: {name}");
         }
     }
 }

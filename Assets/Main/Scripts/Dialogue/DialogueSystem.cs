@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Dialogue.Characters;
 
 namespace Dialogue
 {
@@ -49,23 +50,42 @@ namespace Dialogue
         {
             onUserPromptAdvance?.Invoke();
         }
+        /////////////////////////////////////////////////////
+        /// // Dialogue Container and Name Container //
+        /// //////////////////////////////////////////////////
+
+        // If we don't have the character + config
+        public void ApplySpeakerDataToDialogueContainer(string speakerName)
+        {
+            Character character = CharacterManager.Instance.GetCharacter(speakerName);
+            CharacterConfigData config = character.config != null ? character.config : CharacterManager.Instance.GetCharacterConfig(speakerName);
+
+            ApplySpeakerDataToDialogueContainer(config);
+        }
+        // If we have the config data already
+        public void ApplySpeakerDataToDialogueContainer(CharacterConfigData config)
+        {
+            dialogueContainer.SetConfig(config);
+        }
+
 
         // Manage name tag visibility
         public void ShowSpeakerName(string speaker)
         {
             if (speaker.ToUpper() != "NARRATOR")
             {
-                Debug.Log("Inside ShowSpeakerName -> if not narrator");
                 dialogueContainer.nameContainer.Show(speaker);
             }
             else
             {
-                Debug.Log("Inside ShowSpeakerName -> hide");
                 HideSpeakerName();
             }
         }
         public void HideSpeakerName() => dialogueContainer.nameContainer.Hide();
 
+        ////////////////////////////////////
+        /// Send to conversation manager ///
+        /// ///////////////////////////////
 
         // Send conversation to conManager
         public Coroutine Say(string speaker, string dialogue)
