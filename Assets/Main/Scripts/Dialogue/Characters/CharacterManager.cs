@@ -13,6 +13,15 @@ namespace Dialogue.Characters
         private Dictionary<string, Character> characters = new Dictionary<string, Character>();
 
         private CharacterConfigSO config => DialogueSystem.Instance.Config.characterConfigurationAsset;
+
+        // To retrieve prefab
+        private const string CharacterNameID = "<characterName>";
+        private string _characterRootPath => $"Characters/{CharacterNameID}";
+        private string _characterPrefabPath => $"{_characterRootPath}/{CharacterNameID}";
+
+        [SerializeField] private RectTransform _characterPanel = null;
+        public RectTransform CharacterPanel => _characterPanel;
+
         private void Awake()
         {
             if (Instance != null)
@@ -50,9 +59,19 @@ namespace Dialogue.Characters
             CharacterInfo result = new CharacterInfo();
             result.name = name;
             result.config = config.GetConfig(name);
-            Debug.Log($"Result name: {result.name}, config: alias '{result.config.alias}' text color '{result.config.nameColor.ToString()}'");
+            result.prefab = GetPrefabForCharacter(name);
+
             return result;
         }
+
+        private GameObject GetPrefabForCharacter(string name)
+        {
+            string prefabPath = FormatPrefabPath(_characterPrefabPath, name);
+            return Resources.Load<GameObject>(prefabPath);
+        }
+
+        // We inject the character name to the path to get the correct direction
+        private string FormatPrefabPath(string path, string name) => path.Replace(CharacterNameID, name);
 
         private Character CreateChatacterFromInfo(CharacterInfo info)
         {
@@ -64,11 +83,11 @@ namespace Dialogue.Characters
                     return new CharacterText(info.name, config);
                 case Character.CharacterType.Sprite:
                 case Character.CharacterType.SpriteSheet:
-                    return new CharacterSprite(info.name, config);
+                    return new CharacterSprite(info.name, config, info.prefab);
                 case Character.CharacterType.Live2D:
-                    return new CharacterLive2D(info.name, config);
+                    return new CharacterLive2D(info.name, config, info.prefab);
                 case Character.CharacterType.Model3D:
-                    return new CharacterModel3D(info.name, config);
+                    return new CharacterModel3D(info.name, config, info.prefab);
                 default:
                     Debug.LogError("Wrong character type. Can't create new character.");
                     return null;
@@ -100,6 +119,7 @@ namespace Dialogue.Characters
         {
             public string name = "";
             public CharacterConfigData config = null;
+            public GameObject prefab = null;
         }
     }
 }

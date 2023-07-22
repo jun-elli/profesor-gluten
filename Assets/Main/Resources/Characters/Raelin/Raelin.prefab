@@ -139,7 +139,7 @@ GameObject:
   - component: {fileID: 765990213306594701}
   - component: {fileID: 6459540899827291923}
   m_Layer: 5
-  m_Name: Character - [Raelin]
+  m_Name: Raelin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

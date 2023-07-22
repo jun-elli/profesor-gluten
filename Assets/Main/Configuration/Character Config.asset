@@ -27,10 +27,24 @@ MonoBehaviour:
     dialogueColor: {r: 0, g: 0, b: 0, a: 1}
     nameFont: {fileID: 11400000, guid: 303e24d152704b8afb7068cdf8daff5f, type: 2}
     dialogueFont: {fileID: 11400000, guid: 532aaa78513b1664c8903239fffde48f, type: 2}
-  - name: Jun
-    alias: J
-    characterType: 0
+  - name: Camila
+    alias: Vampira
+    characterType: 1
     nameColor: {r: 0.6509434, g: 0, b: 0.16285597, a: 1}
     dialogueColor: {r: 0.3679245, g: 0.28982732, b: 0.28982732, a: 1}
     nameFont: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    dialogueFont: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
+  - name: Raelin
+    alias: Rae
+    characterType: 2
+    nameColor: {r: 0.6509804, g: 0.40210775, b: 0, a: 1}
+    dialogueColor: {r: 0.16037738, g: 0.13389999, b: 0.13389999, a: 1}
+    nameFont: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+    dialogueFont: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
+  - name: Frogo
+    alias: F
+    characterType: 1
+    nameColor: {r: 0.34718758, g: 0.8867924, b: 0.53042275, a: 1}
+    dialogueColor: {r: 0.17461729, g: 0.33962262, b: 0.31186455, a: 1}
+    nameFont: {fileID: 11400000, guid: 303e24d152704b8afb7068cdf8daff5f, type: 2}
     dialogueFont: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
