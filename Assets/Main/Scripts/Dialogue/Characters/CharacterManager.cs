@@ -15,6 +15,7 @@ namespace Dialogue.Characters
         private CharacterConfigSO config => DialogueSystem.Instance.Config.characterConfigurationAsset;
 
         // To retrieve prefab
+        private const string CharacterCastingID = " as ";
         private const string CharacterNameID = "<characterName>";
         private string _characterRootPath => $"Characters/{CharacterNameID}";
         private string _characterPrefabPath => $"{_characterRootPath}/{CharacterNameID}";
@@ -57,9 +58,13 @@ namespace Dialogue.Characters
         private CharacterInfo GetCharacterInfo(string name)
         {
             CharacterInfo result = new CharacterInfo();
-            result.name = name;
-            result.config = config.GetConfig(name);
-            result.prefab = GetPrefabForCharacter(name);
+            string[] names = name.Split(CharacterCastingID, System.StringSplitOptions.RemoveEmptyEntries);
+            // First item will always be the name
+            result.name = names[0];
+            // If there is no casting, then grab config from name
+            result.castingName = names.Length > 1 ? names[1] : result.name;
+            result.config = config.GetConfig(result.castingName);
+            result.prefab = GetPrefabForCharacter(result.castingName);
 
             return result;
         }
@@ -118,6 +123,7 @@ namespace Dialogue.Characters
         private class CharacterInfo
         {
             public string name = "";
+            public string castingName = "";
             public CharacterConfigData config = null;
             public GameObject prefab = null;
         }
