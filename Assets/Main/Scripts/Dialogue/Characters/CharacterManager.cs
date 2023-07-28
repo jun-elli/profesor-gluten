@@ -65,18 +65,19 @@ namespace Dialogue.Characters
             result.castingName = names.Length > 1 ? names[1] : result.name;
             result.config = config.GetConfig(result.castingName);
             result.prefab = GetPrefabForCharacter(result.castingName);
+            result.rootCharacterFolder = FormatCharacterPath(_characterRootPath, result.castingName);
 
             return result;
         }
 
         private GameObject GetPrefabForCharacter(string name)
         {
-            string prefabPath = FormatPrefabPath(_characterPrefabPath, name);
+            string prefabPath = FormatCharacterPath(_characterPrefabPath, name);
             return Resources.Load<GameObject>(prefabPath);
         }
 
         // We inject the character name to the path to get the correct direction
-        private string FormatPrefabPath(string path, string name) => path.Replace(CharacterNameID, name);
+        private string FormatCharacterPath(string path, string name) => path.Replace(CharacterNameID, name);
 
         private Character CreateChatacterFromInfo(CharacterInfo info)
         {
@@ -88,11 +89,11 @@ namespace Dialogue.Characters
                     return new CharacterText(info.name, config);
                 case Character.CharacterType.Sprite:
                 case Character.CharacterType.SpriteSheet:
-                    return new CharacterSprite(info.name, config, info.prefab);
+                    return new CharacterSprite(info.name, config, info.prefab, info.rootCharacterFolder);
                 case Character.CharacterType.Live2D:
-                    return new CharacterLive2D(info.name, config, info.prefab);
+                    return new CharacterLive2D(info.name, config, info.prefab, info.rootCharacterFolder);
                 case Character.CharacterType.Model3D:
-                    return new CharacterModel3D(info.name, config, info.prefab);
+                    return new CharacterModel3D(info.name, config, info.prefab, info.rootCharacterFolder);
                 default:
                     Debug.LogError("Wrong character type. Can't create new character.");
                     return null;
@@ -126,6 +127,7 @@ namespace Dialogue.Characters
             public string castingName = "";
             public CharacterConfigData config = null;
             public GameObject prefab = null;
+            public string rootCharacterFolder = "";
         }
     }
 }
