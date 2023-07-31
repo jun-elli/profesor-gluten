@@ -12,17 +12,19 @@ namespace Dialogue.Characters
         public RectTransform rootTransform = null;
         public Animator animator;
         public CharacterConfigData config;
+        protected const bool ShowOnStart = true;
 
         // Show and Hide fields
         protected Coroutine co_revealing, co_hiding;
         public bool isRevealing => co_revealing != null;
         public bool isHiding => co_hiding != null;
-        public bool isVisible => false;
+        public virtual bool isVisible { get; set; }
 
         // Moving
         protected Coroutine co_moving;
         public bool isMoving => co_moving != null;
 
+        // Managers
         protected CharacterManager manager => CharacterManager.Instance;
         private DialogueSystem _dialogueSystem => DialogueSystem.Instance;
 

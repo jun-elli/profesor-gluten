@@ -1,4 +1,5 @@
 using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,15 +9,26 @@ namespace Dialogue.Characters
     public class CharacterSprite : Character
     {
         private const string SpriteRenderersParentName = "Renderers";
+        private const string SpriteSheetDefaultSheetName = "Default";
+        private const string SpriteSheetTextureSpriteDelimiter = ": ";
+        private string artAssetsFolder = "";
+
+        public override bool isVisible
+        {
+            get { return isRevealing || rootCanvasGroup.alpha == 1; }
+            set { rootCanvasGroup.alpha = value ? 1 : 0; }
+        }
+
+        // Visuals
         private CanvasGroup rootCanvasGroup => rootTransform.GetComponent<CanvasGroup>();
         public List<CharacterSpriteLayer> layers = new List<CharacterSpriteLayer>();
-        private string artAssetsFolder = "";
+
 
 
         // Constructor
         public CharacterSprite(string name, CharacterConfigData config, GameObject prefab, string rootAssetsFolder) : base(name, config, prefab)
         {
-            rootCanvasGroup.alpha = 0;
+            rootCanvasGroup.alpha = ShowOnStart ? 1 : 0;
             artAssetsFolder = rootAssetsFolder + "/Images";
 
             GetLayers();
@@ -49,7 +61,7 @@ namespace Dialogue.Characters
             for (int i = 0; i < rendererRoot.transform.childCount; i++)
             {
                 Transform child = rendererRoot.transform.GetChild(i);
-                Image rendererImage = child.GetComponent<Image>();
+                Image rendererImage = child.GetComponentInChildren<Image>();
 
                 if (rendererImage != null)
                 {
@@ -66,5 +78,47 @@ namespace Dialogue.Characters
             layers[layer].SetSprite(sprite);
         }
 
+        public Sprite GetSprite(string spriteName)
+        {
+            if (config.characterType == CharacterType.SpriteSheet)
+            {
+                string[] names = spriteName.Split(SpriteSheetTextureSpriteDelimiter);
+                string spriteToLookFor;
+                Sprite[] sheetSprites;
+
+                // Example -> "Deafult: A_happy"
+                if (names.Length == 2)
+                {
+                    // Load all sprites in spritesheet = names[0]
+                    sheetSprites = Resources.LoadAll<Sprite>($"{artAssetsFolder}/{names[0]}");
+                    spriteToLookFor = names[1];
+                }
+                else
+                {
+                    sheetSprites = Resources.LoadAll<Sprite>($"{artAssetsFolder}/{SpriteSheetDefaultSheetName}");
+                    spriteToLookFor = spriteName;
+                }
+
+                // Check we have sprites
+                if (sheetSprites.Length < 1)
+                {
+                    Debug.LogWarning($"Sprite sheet for '{spriteName}' not found or empty.");
+                }
+
+                // Get sprite
+                return Array.Find<Sprite>(sheetSprites, sprite => sprite.name == spriteToLookFor);
+            }
+            else
+            {
+                return Resources.Load<Sprite>($"{artAssetsFolder}/{spriteName}");
+            }
+        }
+
+        // Exchange sprite over time
+        public Coroutine TransitionSprite(Sprite sprite, int layer = 0, float speed = 1)
+        {
+            CharacterSpriteLayer csLayer = layers[layer];
+            return csLayer.TransitionSprite(sprite, speed);
+        }
     }
 }
