@@ -7,25 +7,33 @@ namespace Dialogue.Characters
 {
     public abstract class Character
     {
+        // Const
+        protected const bool ShowOnStart = true;
+
+        // Vars
         public string name = "";
         public string displayName = "";
         public RectTransform rootTransform = null;
         public Animator animator;
         public CharacterConfigData config;
-        protected const bool ShowOnStart = true;
+        public Color Color { get; protected set; } = Color.white;
 
         // Show and Hide fields
         protected Coroutine co_revealing, co_hiding;
         public bool isRevealing => co_revealing != null;
         public bool isHiding => co_hiding != null;
-        public virtual bool isVisible { get; set; }
+        public virtual bool IsVisible { get; set; }
 
         // Moving
         protected Coroutine co_moving;
         public bool isMoving => co_moving != null;
 
+        // Changing color
+        protected Coroutine co_changingColor;
+        public bool isChangingColor => co_changingColor != null;
+
         // Managers
-        protected CharacterManager manager => CharacterManager.Instance;
+        protected CharacterManager characterManager => CharacterManager.Instance;
         private DialogueSystem _dialogueSystem => DialogueSystem.Instance;
 
         public enum CharacterType { Text, Sprite, SpriteSheet, Live2D, Model3D }
@@ -81,9 +89,9 @@ namespace Dialogue.Characters
             }
             if (isHiding)
             {
-                manager.StopCoroutine(co_hiding);
+                characterManager.StopCoroutine(co_hiding);
             }
-            return co_revealing = manager.StartCoroutine(ShowOrHide(true));
+            return co_revealing = characterManager.StartCoroutine(ShowOrHide(true));
         }
 
         public virtual Coroutine Hide()
@@ -94,9 +102,9 @@ namespace Dialogue.Characters
             }
             if (isRevealing)
             {
-                manager.StopCoroutine(co_revealing);
+                characterManager.StopCoroutine(co_revealing);
             }
-            return co_hiding = manager.StartCoroutine(ShowOrHide(false));
+            return co_hiding = characterManager.StartCoroutine(ShowOrHide(false));
         }
 
         public virtual IEnumerator ShowOrHide(bool show)
@@ -149,10 +157,10 @@ namespace Dialogue.Characters
 
             if (isMoving)
             {
-                manager.StopCoroutine(co_moving);
+                characterManager.StopCoroutine(co_moving);
             }
 
-            co_moving = manager.StartCoroutine(MovingToPosition(position, speed, isSmooth));
+            co_moving = characterManager.StartCoroutine(MovingToPosition(position, speed, isSmooth));
             return co_moving;
         }
 
@@ -180,5 +188,35 @@ namespace Dialogue.Characters
             Debug.Log("Done moving");
             co_moving = null;
         }
+
+        /////////////////////////////
+        ///////// Colors ///////////
+        /// ////////////////////////
+
+        public virtual void SetColor(Color color)
+        {
+            this.Color = color;
+        }
+
+        public Coroutine TransitionColor(Color color, float speed = 1f)
+        {
+            this.Color = color;
+
+            if (isChangingColor)
+            {
+                characterManager.StopCoroutine(co_changingColor);
+            }
+
+            co_changingColor = characterManager.StartCoroutine(ChangingColor(color, speed));
+
+            return co_changingColor;
+        }
+
+        public virtual IEnumerator ChangingColor(Color color, float speed)
+        {
+            Debug.Log("Can't change color of a text Character");
+            yield return null;
+        }
+
     }
 }

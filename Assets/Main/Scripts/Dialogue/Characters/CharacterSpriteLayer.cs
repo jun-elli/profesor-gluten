@@ -8,7 +8,7 @@ namespace Dialogue.Characters
 {
     public class CharacterSpriteLayer
     {
-        private CharacterManager chaManager => CharacterManager.Instance;
+        private CharacterManager characterManager => CharacterManager.Instance;
 
         // Const
         private const float DefaultTransitionSpeed = 3f;
@@ -25,6 +25,8 @@ namespace Dialogue.Characters
         public bool isTransitioningSprite => co_transitioningSprite != null;
         private Coroutine co_levelingAlpha = null;
         public bool isLevelingAlpha => co_levelingAlpha != null;
+        private Coroutine co_changingColor = null;
+        public bool isChangingColor => co_changingColor != null;
 
         // Constructor
         public CharacterSpriteLayer(Image defaultRenderer, int layerNum = 0)
@@ -50,10 +52,10 @@ namespace Dialogue.Characters
             // If running, stop it first
             if (isTransitioningSprite)
             {
-                chaManager.StopCoroutine(co_transitioningSprite);
+                characterManager.StopCoroutine(co_transitioningSprite);
             }
 
-            co_transitioningSprite = chaManager.StartCoroutine(TransitioningSprite(sprite, speed));
+            co_transitioningSprite = characterManager.StartCoroutine(TransitioningSprite(sprite, speed));
             return co_transitioningSprite;
         }
 
@@ -90,7 +92,7 @@ namespace Dialogue.Characters
             {
                 return co_levelingAlpha;
             }
-            co_levelingAlpha = chaManager.StartCoroutine(RunLevelingAlpha());
+            co_levelingAlpha = characterManager.StartCoroutine(RunLevelingAlpha());
             return co_levelingAlpha;
         }
 
@@ -116,6 +118,55 @@ namespace Dialogue.Characters
                 yield return null;
             }
             co_levelingAlpha = null;
+        }
+
+        public void SetColor(Color color)
+        {
+
+            Renderer.color = color;
+
+            foreach (CanvasGroup oldCG in _oldRenderers)
+            {
+                oldCG.GetComponent<Image>().color = color;
+            }
+        }
+
+        public Coroutine TransitionColor(Color color, float speed)
+        {
+            if (isChangingColor)
+            {
+                characterManager.StopCoroutine(co_changingColor);
+            }
+
+            co_changingColor = characterManager.StartCoroutine(ChangingColor(color, speed));
+            return co_changingColor;
+        }
+
+        private IEnumerator ChangingColor(Color color, float speedMultiplier)
+        {
+            // We cache current color
+            Color oldColor = Renderer.color;
+            // We cache old images, even if fading out it will look weird if not changed
+            List<Image> oldImages = new List<Image>();
+            foreach (CanvasGroup oldCG in _oldRenderers)
+            {
+                oldImages.Add(oldCG.GetComponent<Image>());
+            }
+            // Keep track of percentage changed
+            float colorPercentage = 0;
+
+            while (colorPercentage < 1)
+            {
+                colorPercentage += DefaultTransitionSpeed * speedMultiplier * Time.deltaTime;
+
+                Renderer.color = Color.Lerp(oldColor, color, colorPercentage);
+                foreach (Image image in oldImages)
+                {
+                    image.color = Renderer.color;
+                }
+                yield return null;
+            }
+            co_changingColor = null;
         }
     }
 

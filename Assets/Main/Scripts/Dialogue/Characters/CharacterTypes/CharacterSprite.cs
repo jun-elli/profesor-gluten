@@ -1,5 +1,6 @@
 using System.Collections;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,7 +14,7 @@ namespace Dialogue.Characters
         private const string SpriteSheetTextureSpriteDelimiter = ": ";
         private string artAssetsFolder = "";
 
-        public override bool isVisible
+        public override bool IsVisible
         {
             get { return isRevealing || rootCanvasGroup.alpha == 1; }
             set { rootCanvasGroup.alpha = value ? 1 : 0; }
@@ -119,6 +120,32 @@ namespace Dialogue.Characters
         {
             CharacterSpriteLayer csLayer = layers[layer];
             return csLayer.TransitionSprite(sprite, speed);
+        }
+
+        public override void SetColor(Color color)
+        {
+            base.SetColor(color);
+
+            foreach (CharacterSpriteLayer layer in layers)
+            {
+                layer.SetColor(color);
+            }
+        }
+
+        public override IEnumerator ChangingColor(Color color, float speed)
+        {
+            foreach (CharacterSpriteLayer layer in layers)
+            {
+                layer.TransitionColor(color, speed);
+            }
+            yield return null;
+
+            while (layers.Any(l => l.isChangingColor))
+            {
+                yield return null;
+            }
+
+            co_changingColor = null;
         }
     }
 }
