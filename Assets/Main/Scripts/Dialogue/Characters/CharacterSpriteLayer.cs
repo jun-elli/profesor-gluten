@@ -131,6 +131,14 @@ namespace Dialogue.Characters
             }
         }
 
+        public void StopChangingColor()
+        {
+            if (!isChangingColor) return;
+
+            characterManager.StopCoroutine(co_changingColor);
+            co_changingColor = null;
+        }
+
         public Coroutine TransitionColor(Color color, float speed)
         {
             if (isChangingColor)

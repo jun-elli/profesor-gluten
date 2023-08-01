@@ -9,6 +9,7 @@ namespace Dialogue.Characters
     {
         // Const
         protected const bool ShowOnStart = true;
+        private const float UnhighlightedStrength = 0.65f;
 
         // Vars
         public string name = "";
@@ -17,6 +18,10 @@ namespace Dialogue.Characters
         public Animator animator;
         public CharacterConfigData config;
         public Color Color { get; protected set; } = Color.white;
+        protected Color displayColor => IsHighlighted ? highlightedColor : unhighlightedColor;
+        protected Color highlightedColor => Color;
+        protected Color unhighlightedColor => new Color(Color.r * UnhighlightedStrength, Color.g * UnhighlightedStrength, Color.b * UnhighlightedStrength, Color.a);
+        public bool IsHighlighted { get; protected set; } = true;
 
         // Show and Hide fields
         protected Coroutine co_revealing, co_hiding;
@@ -31,6 +36,11 @@ namespace Dialogue.Characters
         // Changing color
         protected Coroutine co_changingColor;
         public bool isChangingColor => co_changingColor != null;
+
+        // Highlighting
+        protected Coroutine co_highlighting = null;
+        public bool isHighlighting => IsHighlighted && co_highlighting != null;
+        public bool isUnhighlighting => !IsHighlighted && co_highlighting != null;
 
         // Managers
         protected CharacterManager characterManager => CharacterManager.Instance;
@@ -207,7 +217,7 @@ namespace Dialogue.Characters
                 characterManager.StopCoroutine(co_changingColor);
             }
 
-            co_changingColor = characterManager.StartCoroutine(ChangingColor(color, speed));
+            co_changingColor = characterManager.StartCoroutine(ChangingColor(displayColor, speed));
 
             return co_changingColor;
         }
@@ -215,6 +225,46 @@ namespace Dialogue.Characters
         public virtual IEnumerator ChangingColor(Color color, float speed)
         {
             Debug.Log("Can't change color of a text Character");
+            yield return null;
+        }
+
+        public Coroutine Highlight(float speed = 1f)
+        {
+            if (isHighlighting)
+            {
+                return co_highlighting;
+            }
+
+            if (isUnhighlighting)
+            {
+                characterManager.StopCoroutine(co_highlighting);
+            }
+
+            IsHighlighted = true;
+            co_highlighting = characterManager.StartCoroutine(Highlighting(IsHighlighted, speed));
+            return co_highlighting;
+        }
+
+        public Coroutine Unhighlight(float speed = 1f)
+        {
+            if (isUnhighlighting)
+            {
+                return co_highlighting;
+            }
+
+            if (isHighlighting)
+            {
+                characterManager.StopCoroutine(co_highlighting);
+            }
+
+            IsHighlighted = false;
+            co_highlighting = characterManager.StartCoroutine(Highlighting(IsHighlighted, speed));
+            return co_highlighting;
+        }
+
+        protected virtual IEnumerator Highlighting(bool highlight, float speed)
+        {
+            Debug.Log("Text Character can't be highlighted!");
             yield return null;
         }
 

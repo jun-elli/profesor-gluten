@@ -125,9 +125,11 @@ namespace Dialogue.Characters
         public override void SetColor(Color color)
         {
             base.SetColor(color);
+            color = displayColor;
 
             foreach (CharacterSpriteLayer layer in layers)
             {
+                layer.StopChangingColor();
                 layer.SetColor(color);
             }
         }
@@ -146,6 +148,25 @@ namespace Dialogue.Characters
             }
 
             co_changingColor = null;
+        }
+
+        protected override IEnumerator Highlighting(bool highlight, float speedMultiplier)
+        {
+            Color targetColor = displayColor;
+
+            foreach (CharacterSpriteLayer layer in layers)
+            {
+                layer.TransitionColor(targetColor, speedMultiplier);
+            }
+
+            yield return null;
+
+            while (layers.Any(l => l.isChangingColor))
+            {
+                yield return null;
+            }
+
+            co_highlighting = null;
         }
     }
 }
