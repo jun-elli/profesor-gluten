@@ -37,7 +37,7 @@ namespace Dialogue.Characters
             Debug.Log($"Character Sprite created: {name}");
         }
 
-        public override IEnumerator ShowOrHide(bool show)
+        protected override IEnumerator ShowOrHide(bool show)
         {
             float targetAlpha = show ? 1f : 0;
 
@@ -167,6 +167,29 @@ namespace Dialogue.Characters
             }
 
             co_highlighting = null;
+        }
+
+        protected override IEnumerator FacingDirection(bool faceLeft, float speedMultiplier, bool isImmediate)
+        {
+            foreach (CharacterSpriteLayer layer in layers)
+            {
+                if (faceLeft)
+                {
+                    layer.FaceLeft(speedMultiplier, isImmediate);
+                }
+                else
+                {
+                    layer.FaceRight(speedMultiplier, isImmediate);
+                }
+            }
+            yield return null;
+
+            while (layers.Any(l => l.isFlipping))
+            {
+                yield return null;
+            }
+
+            co_flipping = null;
         }
     }
 }

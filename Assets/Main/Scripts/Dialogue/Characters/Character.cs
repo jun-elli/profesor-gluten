@@ -10,6 +10,7 @@ namespace Dialogue.Characters
         // Const
         protected const bool ShowOnStart = true;
         private const float UnhighlightedStrength = 0.65f;
+        public const bool DefaultOrientationIsFacingLeft = true;
 
         // Vars
         public string name = "";
@@ -17,6 +18,8 @@ namespace Dialogue.Characters
         public RectTransform rootTransform = null;
         public Animator animator;
         public CharacterConfigData config;
+
+        // Color's vars
         public Color Color { get; protected set; } = Color.white;
         protected Color displayColor => IsHighlighted ? highlightedColor : unhighlightedColor;
         protected Color highlightedColor => Color;
@@ -41,6 +44,13 @@ namespace Dialogue.Characters
         protected Coroutine co_highlighting = null;
         public bool isHighlighting => IsHighlighted && co_highlighting != null;
         public bool isUnhighlighting => !IsHighlighted && co_highlighting != null;
+
+        // Flipping
+        protected bool facingLeft = DefaultOrientationIsFacingLeft;
+        public bool isFacingLeft => facingLeft;
+        public bool isFacingRight => !facingLeft;
+        protected Coroutine co_flipping = null;
+        public bool isFlipping => co_flipping != null;
 
         // Managers
         protected CharacterManager characterManager => CharacterManager.Instance;
@@ -117,7 +127,7 @@ namespace Dialogue.Characters
             return co_hiding = characterManager.StartCoroutine(ShowOrHide(false));
         }
 
-        public virtual IEnumerator ShowOrHide(bool show)
+        protected virtual IEnumerator ShowOrHide(bool show)
         {
             yield return null;
         }
@@ -265,6 +275,50 @@ namespace Dialogue.Characters
         protected virtual IEnumerator Highlighting(bool highlight, float speed)
         {
             Debug.Log("Text Character can't be highlighted!");
+            yield return null;
+        }
+
+        /////////////////////////////
+        ///////// Flipping ///////////
+        /// ////////////////////////
+
+        public Coroutine Flip(float speed = 1, bool isImmediate = false)
+        {
+            if (isFacingLeft)
+            {
+                return FaceRight(speed, isImmediate);
+            }
+            else
+            {
+                return FaceLeft(speed, isImmediate);
+            }
+        }
+
+        protected Coroutine FaceLeft(float speed = 1, bool isImmediate = false)
+        {
+            if (isFlipping)
+            {
+                characterManager.StopCoroutine(co_flipping);
+            }
+            facingLeft = true;
+            co_flipping = characterManager.StartCoroutine(FacingDirection(facingLeft, speed, isImmediate));
+            return co_flipping;
+        }
+
+        protected Coroutine FaceRight(float speed = 1, bool isImmediate = false)
+        {
+            if (isFlipping)
+            {
+                characterManager.StopCoroutine(co_flipping);
+            }
+            facingLeft = false;
+            co_flipping = characterManager.StartCoroutine(FacingDirection(facingLeft, speed, isImmediate));
+            return co_flipping;
+        }
+
+        protected virtual IEnumerator FacingDirection(bool faceLeft, float speedMultiplier, bool isImmediate)
+        {
+            Debug.Log("Can't flip text Charactr!");
             yield return null;
         }
 

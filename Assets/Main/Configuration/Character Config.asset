@@ -43,7 +43,7 @@ MonoBehaviour:
     dialogueFont: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
   - name: Frogo
     alias: F
-    characterType: 1
+    characterType: 2
     nameColor: {r: 0.34718758, g: 0.8867924, b: 0.53042275, a: 1}
     dialogueColor: {r: 0.17461729, g: 0.33962262, b: 0.31186455, a: 1}
     nameFont: {fileID: 11400000, guid: 303e24d152704b8afb7068cdf8daff5f, type: 2}

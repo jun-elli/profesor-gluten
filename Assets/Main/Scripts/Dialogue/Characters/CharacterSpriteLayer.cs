@@ -19,6 +19,7 @@ namespace Dialogue.Characters
         public CanvasGroup rendererCG => Renderer.GetComponent<CanvasGroup>();
         private List<CanvasGroup> _oldRenderers = new List<CanvasGroup>();
         private float _transitionSpeedMultiplier = 1f;
+        private bool isFacingLeft = Character.DefaultOrientationIsFacingLeft;
 
         // Coroutines
         private Coroutine co_transitioningSprite = null;
@@ -27,6 +28,8 @@ namespace Dialogue.Characters
         public bool isLevelingAlpha => co_levelingAlpha != null;
         private Coroutine co_changingColor = null;
         public bool isChangingColor => co_changingColor != null;
+        private Coroutine co_flipping = null;
+        public bool isFlipping => co_flipping != null;
 
         // Constructor
         public CharacterSpriteLayer(Image defaultRenderer, int layerNum = 0)
@@ -34,6 +37,10 @@ namespace Dialogue.Characters
             LayerNum = layerNum;
             Renderer = defaultRenderer;
         }
+
+        /// ///////////////////
+        /// // Sprites ///////
+        /// //////////////////
 
         public void SetSprite(Sprite sprite)
         {
@@ -120,6 +127,10 @@ namespace Dialogue.Characters
             co_levelingAlpha = null;
         }
 
+        /// ///////////////////
+        /// /// Colors  ///////
+        /// //////////////////
+
         public void SetColor(Color color)
         {
 
@@ -175,6 +186,69 @@ namespace Dialogue.Characters
                 yield return null;
             }
             co_changingColor = null;
+        }
+
+        /// ///////////////////
+        /// ////  Flip  ///////
+        /// //////////////////
+
+        public Coroutine Flip(float speed = 1, bool isImmediate = false)
+        {
+            if (isFacingLeft)
+            {
+                return FaceRight(speed, isImmediate);
+            }
+            else
+            {
+                return FaceLeft(speed, isImmediate);
+            }
+        }
+
+        public Coroutine FaceLeft(float speed = 1, bool isImmediate = false)
+        {
+            if (isFlipping)
+            {
+                characterManager.StopCoroutine(co_flipping);
+            }
+            isFacingLeft = true;
+            co_flipping = characterManager.StartCoroutine(FacingDirection(isFacingLeft, speed, isImmediate));
+            return co_flipping;
+        }
+
+        public Coroutine FaceRight(float speed = 1, bool isImmediate = false)
+        {
+            if (isFlipping)
+            {
+                characterManager.StopCoroutine(co_flipping);
+            }
+            isFacingLeft = false;
+            co_flipping = characterManager.StartCoroutine(FacingDirection(isFacingLeft, speed, isImmediate));
+            return co_flipping;
+        }
+
+        private IEnumerator FacingDirection(bool faceLeft, float speedMultiplier, bool isImmediate)
+        {
+            float xScale = faceLeft ? 1 : -1;
+            Vector3 newScale = new Vector3(xScale, 1, 1);
+
+            if (!isImmediate)
+            {
+                Image newRenderer = CreateRenderer(Renderer.transform.parent);
+                newRenderer.transform.localScale = newScale;
+
+                _transitionSpeedMultiplier = speedMultiplier;
+                TryStartLevelingAlpha();
+                while (isLevelingAlpha)
+                {
+                    yield return null;
+                }
+            }
+            else
+            {
+                Renderer.transform.localScale = newScale;
+            }
+            yield return null;
+            co_flipping = null;
         }
     }
 
