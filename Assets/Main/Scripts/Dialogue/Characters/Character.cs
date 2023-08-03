@@ -18,6 +18,7 @@ namespace Dialogue.Characters
         public RectTransform rootTransform = null;
         public Animator animator;
         public CharacterConfigData config;
+        public int Priority { get; protected set; }
 
         // Color's vars
         public Color Color { get; protected set; } = Color.white;
@@ -67,7 +68,7 @@ namespace Dialogue.Characters
             if (prefab != null)
             {
                 GameObject ob = Object.Instantiate(prefab, CharacterManager.Instance.CharacterPanel);
-                ob.name = $"{name} - {displayName} - {config.name}";
+                ob.name = $"{name.ToUpper()} as {prefab.name}";
                 ob.SetActive(true);
                 rootTransform = ob.GetComponent<RectTransform>();
                 animator = rootTransform.GetComponentInChildren<Animator>();
@@ -322,5 +323,24 @@ namespace Dialogue.Characters
             yield return null;
         }
 
+        /////////////////////////////
+        ///////// Priority ///////////
+        /// ////////////////////////
+
+
+        /// <summary>
+        /// Set which character will be in front of the others by piority
+        /// </summary>
+        /// <param name="priority">Order in which character will appear, high front, low back</param>
+        /// <param name="autoSortCharactersOnUI">If manager will automatically sort the other characters to match priority</param>
+        public void SetPriority(int priority, bool autoSortCharactersOnUI = true)
+        {
+            this.Priority = priority;
+
+            if (autoSortCharactersOnUI)
+            {
+                characterManager.SortCharacters();
+            }
+        }
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Dialogue.Characters
@@ -48,7 +49,7 @@ namespace Dialogue.Characters
             // Create character with data
             Character character = CreateChatacterFromInfo(info);
             // Add to dict
-            characters.Add(characterName.ToLower(), character);
+            characters.Add(info.name.ToLower(), character);
 
             return character;
         }
@@ -118,6 +119,52 @@ namespace Dialogue.Characters
         public CharacterConfigData GetCharacterConfig(string characterName)
         {
             return config.GetConfig(characterName);
+        }
+
+        // We sort them ALL from low to high priority
+        public void SortCharacters()
+        {
+            List<Character> activeCharacters = characters.Values.Where(c => c.rootTransform.gameObject.activeInHierarchy && c.IsVisible).ToList();
+            List<Character> inactiveCharacters = characters.Values.Except(activeCharacters).ToList();
+
+            activeCharacters.Sort((a, b) => a.Priority.CompareTo(b.Priority));
+            activeCharacters.Concat(inactiveCharacters);
+            SortCharactersInHierarchy(activeCharacters);
+        }
+
+        // We prioritize this group of characters above the rest, in order we write them on the array
+        public void SortCharacters(string[] characterNames)
+        {
+            List<Character> sortedCharacters = characterNames
+                .Select(name => GetCharacter(name))
+                .Where(c => c != null)
+                .Reverse()
+                .ToList();
+
+            List<Character> remainingCharacters = characters.Values
+                .Except(sortedCharacters)
+                .OrderBy(character => character.Priority)
+                .ToList();
+
+            // Update priority to match sorting
+            int startPriority = remainingCharacters.Count > 0 ? remainingCharacters.Max(c => c.Priority) : 0;
+            for (int i = 0; i < sortedCharacters.Count; i++)
+            {
+                Character character = sortedCharacters[i];
+                character.SetPriority(startPriority + i + 1, false);
+            }
+
+            List<Character> allCharacters = remainingCharacters.Concat(sortedCharacters).ToList();
+            SortCharactersInHierarchy(allCharacters);
+        }
+
+        private void SortCharactersInHierarchy(List<Character> charactersSortingOrder)
+        {
+            int i = 0;
+            foreach (Character character in charactersSortingOrder)
+            {
+                character.rootTransform.SetSiblingIndex(i++);
+            }
         }
 
         // Class to store character data: name and config
