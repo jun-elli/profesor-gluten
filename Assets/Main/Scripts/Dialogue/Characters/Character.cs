@@ -11,6 +11,7 @@ namespace Dialogue.Characters
         protected const bool ShowOnStart = true;
         private const float UnhighlightedStrength = 0.65f;
         public const bool DefaultOrientationIsFacingLeft = true;
+        private const string AnimationRefreshTrigger = "Refresh";
 
         // Vars
         public string name = "";
@@ -342,5 +343,21 @@ namespace Dialogue.Characters
                 characterManager.SortCharacters();
             }
         }
+
+        /////////////////////////////
+        ///////// Animation ///////////
+        /// ////////////////////////
+
+        public void Animate(string animationName)
+        {
+            animator.SetTrigger(animationName);
+        }
+
+        public void Animate(string animationName, bool state)
+        {
+            animator.SetBool(animationName, state);
+            animator.SetTrigger(AnimationRefreshTrigger);
+        }
+
     }
 }
