@@ -41,7 +41,7 @@ namespace Dialogue.Characters
             // Check if it already exists in manager dictionary
             if (characters.ContainsKey(characterName.ToLower()))
             {
-                Debug.LogError($"Character {characterName} already exists.");
+                Debug.LogError($"Character {characterName} already exists. Duplicate not created.");
                 return null;
             }
             // Get character config data

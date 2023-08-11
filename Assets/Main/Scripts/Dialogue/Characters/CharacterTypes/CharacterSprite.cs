@@ -191,5 +191,18 @@ namespace Dialogue.Characters
 
             co_flipping = null;
         }
+
+        // Expressions
+
+        public override void SetCastingExpression(int layer, string expression)
+        {
+            Sprite sprite = GetSprite(expression);
+            if (sprite == null)
+            {
+                Debug.LogWarning($"Sprite '{expression}' couldn't be found for character '{name}'.");
+                return;
+            }
+            TransitionSprite(sprite, layer);
+        }
     }
 }

@@ -8,7 +8,7 @@ namespace Dialogue.Characters
     public abstract class Character
     {
         // Const
-        protected const bool ShowOnStart = true;
+        protected const bool ShowOnStart = false;
         private const float UnhighlightedStrength = 0.65f;
         public const bool DefaultOrientationIsFacingLeft = true;
         private const string AnimationRefreshTrigger = "Refresh";
@@ -357,6 +357,15 @@ namespace Dialogue.Characters
         {
             animator.SetBool(animationName, state);
             animator.SetTrigger(AnimationRefreshTrigger);
+        }
+
+        /////////////////////////////
+        ///////// Expressions ///////////
+        /// ////////////////////////
+
+        public virtual void SetCastingExpression(int layer, string expression)
+        {
+            return;
         }
 
     }

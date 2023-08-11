@@ -11,7 +11,7 @@ namespace Dialogue
         // name -> name that we write in text assets when saying who is speaking
         // castName -> name that will apear in nametag box
         public string name, castName;
-        public string displayName => castName != string.Empty ? castName : name;
+        public string displayName => isCastingName ? castName : name;
         public Vector2 castPosition;
         public List<(int layer, string expression)> CastExpressions { get; set; }
         private const string CastNameID = " as ";
@@ -21,14 +21,26 @@ namespace Dialogue
         private const char LayerJoin = ',';
         private const char LayerDelimiter = ':';
 
+        // Character will appear on screen if name preceeded by EnterKeyword
+        private const string EnterKeyword = "enter ";
+        public bool shouldCharacterEnter = false;
+
+        // Check for casting data
+        public bool isCastingName => castName != string.Empty;
+        public bool isCastingPosition = false;
+        public bool isCastingExpressions => CastExpressions.Count > 0;
+
         public DL_Speaker(string rawSpeaker)
         {
+            rawSpeaker = ProcessNameKeywords(rawSpeaker);
+
             string pattern = @$"{CastNameID}|{CastPositionID}|{CastExpressionID.Insert(CastExpressionID.Length - 1, @"\")}";
             MatchCollection matches = Regex.Matches(rawSpeaker, pattern);
 
             // Populate with empty values to avoid NullPointExceptions
             castName = "";
             castPosition = Vector2.zero;
+            isCastingPosition = false;
             CastExpressions = new List<(int layer, string expression)>();
 
             // Casting is optional, if there is none, name is speaker
@@ -69,6 +81,7 @@ namespace Dialogue
                     {
                         float.TryParse(axis[1], NumberStyles.Float, new CultureInfo("en-US"), out castPosition.y);
                     }
+                    isCastingPosition = true;
                 }
                 // Find casting expressions
                 else if (match.Value == CastExpressionID)
@@ -81,10 +94,28 @@ namespace Dialogue
                         .Select(x =>
                         {
                             var parts = x.Trim().Split(LayerDelimiter);
-                            return (int.Parse(parts[0]), parts[1]);
+                            // If we have layer and expressiom
+                            if (parts.Length == 2)
+                            {
+                                return (int.Parse(parts[0]), parts[1]);
+                            } // If we only have expression, we default to 0
+                            else
+                            {
+                                return (0, parts[0]);
+                            }
                         }).ToList();
                 }
             }
+        }
+
+        private string ProcessNameKeywords(string rawSpeaker)
+        {
+            if (rawSpeaker.StartsWith(EnterKeyword))
+            {
+                rawSpeaker = rawSpeaker.Substring(EnterKeyword.Length);
+                shouldCharacterEnter = true;
+            }
+            return rawSpeaker;
         }
     }
 }

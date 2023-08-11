@@ -57,7 +57,7 @@ namespace Dialogue
         // If we don't have the character + config
         public void ApplySpeakerDataToDialogueContainer(string speakerName)
         {
-            Character character = CharacterManager.Instance.GetCharacter(speakerName);
+            Character character = CharacterManager.Instance.GetCharacter(speakerName, true);
             CharacterConfigData config = character.config != null ? character.config : CharacterManager.Instance.GetCharacterConfig(speakerName);
 
             ApplySpeakerDataToDialogueContainer(config);

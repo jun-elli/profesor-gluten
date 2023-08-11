@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Dialogue.Characters;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Dialogue
@@ -75,10 +77,9 @@ namespace Dialogue
         }
         IEnumerator RunDialogue(DialogueLine line)
         {
-            // Show name tag or not
             if (line.hasSpeaker)
             {
-                dialogueSystem.ShowSpeakerName(line.speakerData.displayName);
+                HandleSpeakerLogic(line.speakerData);
             }
             else
             {
@@ -88,6 +89,39 @@ namespace Dialogue
             // Build dialogue line
             yield return BuildLineSegments(line.dialogueData);
         }
+
+        private void HandleSpeakerLogic(DL_Speaker speakerData)
+        {
+            bool shouldCreateCharacter = speakerData.shouldCharacterEnter || speakerData.isCastingPosition || speakerData.isCastingExpressions;
+            Character character = CharacterManager.Instance.GetCharacter(speakerData.name, shouldCreateCharacter);
+
+            if (speakerData.shouldCharacterEnter && !character.IsVisible && !character.isRevealing)
+            {
+                character.Show();
+            }
+
+            // Add character name to UI
+            dialogueSystem.ShowSpeakerName(speakerData.displayName);
+            // Customize dialogue for this character
+            dialogueSystem.ApplySpeakerDataToDialogueContainer(speakerData.name);
+
+            // Cast position
+            if (speakerData.isCastingPosition)
+            {
+                character.MoveToPosition(speakerData.castPosition);
+            }
+
+            // Cast expressions
+            if (speakerData.isCastingExpressions)
+            {
+                foreach (var ce in speakerData.CastExpressions)
+                {
+                    character.SetCastingExpression(ce.layer, ce.expression);
+                }
+            }
+        }
+
+
         IEnumerator RunCommands(DialogueLine line)
         {
             List<DL_Commands.Command> commands = line.commandsData.commands;
