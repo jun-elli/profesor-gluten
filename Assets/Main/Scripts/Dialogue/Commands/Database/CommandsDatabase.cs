@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Dialogue
+namespace Dialogue.Commands
 {
     /// <summary>
     /// Acces dictionary of commands

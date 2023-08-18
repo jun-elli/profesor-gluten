@@ -5,7 +5,7 @@ using UnityEngine;
 using System.Reflection;
 using System.Linq;
 
-namespace Dialogue
+namespace Dialogue.Commands
 {
     /// <summary>
     /// Class in charge of looking for commands in DB and executing them.
@@ -93,17 +93,17 @@ namespace Dialogue
             {
                 command.DynamicInvoke((object)args);
             }
-            else if (command is Func<IEnumerator>)
+            else if (command is Func<IEnumerator> func0)
             {   // We cast it as Func type and run the command
-                yield return ((Func<IEnumerator>)command)();
+                yield return func0();
             }
-            else if (command is Func<string, IEnumerator>)
+            else if (command is Func<string, IEnumerator> func1)
             {
-                yield return ((Func<string, IEnumerator>)command)(args[0]);
+                yield return func1(args[0]);
             }
-            else if (command is Func<string[], IEnumerator>)
+            else if (command is Func<string[], IEnumerator> func2)
             {
-                yield return ((Func<string[], IEnumerator>)command)(args);
+                yield return func2(args);
             }
         }
     }

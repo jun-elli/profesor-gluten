@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Dialogue.Characters;
 using Unity.VisualScripting;
 using UnityEngine;
+using Dialogue.Commands;
 
 namespace Dialogue
 {
