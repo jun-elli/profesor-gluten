@@ -28,7 +28,7 @@ namespace Dialogue.Commands
             database.AddCommand("SimpleProcessWithMultipleParam", new Func<string[], IEnumerator>(SimpleProcessWithMultipleParam));
 
             // Move example
-            database.AddCommand("MoveCharacter", new Func<string, IEnumerator>(MoveCharacter));
+            // database.AddCommand("MoveCharacter", new Func<string, IEnumerator>(MoveCharacter));
 
         }
 

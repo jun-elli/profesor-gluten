@@ -9,6 +9,9 @@ namespace Dialogue
 {
     public class ConversationManager
     {
+        // Const
+        private const string WaitCommandName = "Wait";
+        // Vars
         private DialogueSystem dialogueSystem => DialogueSystem.Instance;
         private Coroutine process = null;
         public bool isRunning => process != null;
@@ -129,7 +132,7 @@ namespace Dialogue
 
             foreach (DL_Commands.Command command in commands)
             {
-                if (command.isWaiting)
+                if (command.isWaiting || command.name == WaitCommandName)
                 {
                     yield return CommandsManager.Instance.Execute(command.name, command.arguments);
                 }

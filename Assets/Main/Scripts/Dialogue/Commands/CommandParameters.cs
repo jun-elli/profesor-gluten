@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 
 /// <summary>
@@ -71,7 +72,7 @@ namespace Dialogue.Commands
             }
             else if (typeof(T) == typeof(float))
             {
-                if (float.TryParse(pValue, out float floatValue))
+                if (float.TryParse(pValue, NumberStyles.Float, new CultureInfo("en-US"), out float floatValue))
                 {
                     value = (T)(object)floatValue;
                     return true;

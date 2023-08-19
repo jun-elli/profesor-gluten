@@ -36,7 +36,7 @@ namespace Dialogue.Characters
             }
         }
 
-        public Character CreateCharacter(string characterName)
+        public Character CreateCharacter(string characterName, bool shouldEnableOnCreation = false)
         {
             // Check if it already exists in manager dictionary
             if (characters.ContainsKey(characterName.ToLower()))
@@ -50,7 +50,15 @@ namespace Dialogue.Characters
             Character character = CreateChatacterFromInfo(info);
             // Add to dict
             characters.Add(info.name.ToLower(), character);
-
+            // Show or keep hidden
+            if (shouldEnableOnCreation && !character.IsVisible)
+            {
+                character.Show();
+            }
+            else if (!shouldEnableOnCreation && character.IsVisible)
+            {
+                character.IsVisible = false;
+            }
             return character;
         }
 
