@@ -4,6 +4,7 @@ using Dialogue.Characters;
 using Unity.VisualScripting;
 using UnityEngine;
 using Dialogue.Commands;
+using Extensions;
 
 namespace Dialogue
 {
@@ -76,6 +77,8 @@ namespace Dialogue
                 {
                     // Wait for user input
                     yield return WaitForUserInput();
+
+                    CommandsManager.Instance.StopAllProcesses();
                 }
             }
         }
@@ -134,7 +137,17 @@ namespace Dialogue
             {
                 if (command.isWaiting || command.name == WaitCommandName)
                 {
-                    yield return CommandsManager.Instance.Execute(command.name, command.arguments);
+                    CoroutineWrapper coroutineW = CommandsManager.Instance.Execute(command.name, command.arguments);
+
+                    while (!coroutineW.IsDone)
+                    {
+                        if (hasUserPrompt)
+                        {
+                            CommandsManager.Instance.StopCurrentProcess();
+                            hasUserPrompt = false;
+                        }
+                        yield return null;
+                    }
                 }
                 else
                 {

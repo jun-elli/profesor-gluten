@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Reflection;
 using System.Linq;
+using Extensions;
+using UnityEngine.Events;
 
 namespace Dialogue.Commands
 {
@@ -15,9 +17,11 @@ namespace Dialogue.Commands
     {
         // We make it a singleton
         public static CommandsManager Instance { get; private set; }
-        private Coroutine currentProcess = null;
-        private bool isProcessRunning => currentProcess != null;
         private CommandsDatabase database;
+
+        // Coroutine & process management
+        private List<CommandProcess> activeProcesses = new();
+        private CommandProcess lastProcess => activeProcesses.Last();
 
         private void Awake()
         {
@@ -46,7 +50,7 @@ namespace Dialogue.Commands
             }
         }
 
-        public Coroutine Execute(string commandName, params string[] args)
+        public CoroutineWrapper Execute(string commandName, params string[] args)
         {
             Delegate command = database.GetCommand(commandName);
             // Guard to check if we have a command
@@ -57,26 +61,61 @@ namespace Dialogue.Commands
             return StartProcess(commandName, command, args);
         }
 
-        private Coroutine StartProcess(string commandName, Delegate command, string[] args)
+        private CoroutineWrapper StartProcess(string commandName, Delegate command, string[] args)
         {
-            StopCurrentProcess();
+            // StopCurrentProcess();
+            // Create new CommandProcess to contain data
+            System.Guid guid = new();
+            CommandProcess commandProcess = new CommandProcess(guid, commandName, command, null, args, null);
+            activeProcesses.Add(commandProcess);
 
-            currentProcess = StartCoroutine(RunningProcess(command, args));
-            return currentProcess;
+            // Create coroutine
+            Coroutine coroutine = StartCoroutine(RunningProcess(commandProcess));
+
+            // Create coroutine wrapper
+            commandProcess.runningProcess = new CoroutineWrapper(this, coroutine);
+
+            return commandProcess.runningProcess;
         }
 
-        private void StopCurrentProcess()
+        public void StopCurrentProcess()
         {
-            if (currentProcess != null)
+            if (lastProcess != null)
             {
-                StopCoroutine(currentProcess);
+                KillProcess(lastProcess);
             }
-            currentProcess = null;
         }
-        private IEnumerator RunningProcess(Delegate command, string[] args)
+
+        public void StopAllProcesses()
         {
-            yield return WaitingForProcessCompletion(command, args);
-            currentProcess = null;
+            foreach (var process in activeProcesses)
+            {
+                if (process.runningProcess != null && !process.runningProcess.IsDone)
+                {
+                    process.runningProcess.Stop();
+                }
+                process.onTerminateAction?.Invoke();
+            }
+            activeProcesses.Clear();
+        }
+
+        private IEnumerator RunningProcess(CommandProcess process)
+        {
+            yield return WaitingForProcessCompletion(process.command, process.args);
+            KillProcess(process);
+        }
+
+        public void KillProcess(CommandProcess process)
+        {
+            activeProcesses.Remove(process);
+
+            if (process.runningProcess != null && !process.runningProcess.IsDone)
+            {
+                process.runningProcess.Stop();
+            }
+
+            // If there's an action to run after killing the process, do it
+            process.onTerminateAction?.Invoke();
         }
 
         private IEnumerator WaitingForProcessCompletion(Delegate command, string[] args)
@@ -105,6 +144,17 @@ namespace Dialogue.Commands
             {
                 yield return func2(args);
             }
+        }
+
+        public void AddTerminationActionToCurrentProcess(UnityAction action)
+        {
+            if (lastProcess == null)
+            {
+                return;
+            }
+
+            lastProcess.onTerminateAction = new UnityEvent();
+            lastProcess.onTerminateAction.AddListener(action);
         }
     }
 }

@@ -69,6 +69,14 @@ namespace Dialogue.Commands
             // We wait until all characters are revealed
             if (!isImmediate)
             {
+                // Add action on user termination of process, complete it
+                CommandsManager.Instance.AddTerminationActionToCurrentProcess(() =>
+                {
+                    foreach (Character character in characters)
+                    {
+                        character.IsVisible = true;
+                    }
+                });
                 while (characters.Any(c => c.isRevealing))
                 {
                     yield return null;
@@ -115,6 +123,15 @@ namespace Dialogue.Commands
             // We wait until all characters are revealed
             if (!isImmediate)
             {
+                // Add action on user termination of process, complete it
+                CommandsManager.Instance.AddTerminationActionToCurrentProcess(() =>
+                {
+                    foreach (Character character in characters)
+                    {
+                        character.IsVisible = false;
+                    }
+                });
+
                 while (characters.Any(c => c.isHiding))
                 {
                     yield return null;
@@ -166,6 +183,7 @@ namespace Dialogue.Commands
             }
             else
             {
+                CommandsManager.Instance.AddTerminationActionToCurrentProcess(() => { character?.SetPosition(position); });
                 yield return character.MoveToPosition(position, speed, isSmooth);
             }
         }
