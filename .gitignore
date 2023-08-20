@@ -11,6 +11,9 @@
 /[Uu]ser[Ss]ettings/
 /[Aa]ssets/Testing/
 
+# For now don't track images since I haven't check if all of them are free to use
+/[Aa]ssets/Main/Resources/Graphics
+
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
 /[Mm]emoryCaptures/
