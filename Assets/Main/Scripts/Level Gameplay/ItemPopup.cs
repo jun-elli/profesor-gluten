@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using Level.Items;
+using Dialogue;
 
 public class ItemPopup : MonoBehaviour
 {
-    private GameObject item;
-    [SerializeField] private GameObject levelManagerObj;
-    private LevelManager levelManager;
+    [SerializeField] private LevelManager levelManager;
     [SerializeField] private TextMeshProUGUI nameText;
     [SerializeField] private Image itemImage;
-    [SerializeField] private bool itemHasGluten;
+    private bool itemHasGluten;
+    private Item item;
 
     // Start is called before the first frame update
     void Start()
     {
-        levelManager = levelManagerObj.GetComponent<LevelManager>();
     }
 
     // Update is called once per frame
@@ -31,30 +31,34 @@ public class ItemPopup : MonoBehaviour
         {
             gameObject.SetActive(true);
         }
-        item = itemToDisplay;
+
+        item = itemToDisplay.GetComponent<Item>();
+
         // name
-        nameText.text = item.name;
+        nameText.text = item.ItemName;
         // image
-        itemImage.sprite = item.GetComponent<Image>().sprite;
+        itemImage.sprite = item.Sprite;
         // has gluten
-        itemHasGluten = item.GetComponent<Item>().HasGluten;
+        itemHasGluten = item.HasGluten;
     }
 
-    public void HandleHasGlutenClick()
+    public void HandleHasGlutenClick(bool userAnswer)
     {
-        if (itemHasGluten)
+        if (itemHasGluten == userAnswer)
         {
             Debug.Log("You're correct");
             // add point
             levelManager.SetPoints(1);
-            // call dialogue with explanation of why it was correct
+            // Call Dialogue System to run success text
+            DialogueSystem.Instance.PlayConversation(item.SuccessDialogueFile);
         }
         else
         {
             Debug.Log("You're wrong!");
             // subtract life
             levelManager.SetLives(-1);
-            // call dialogue with explanation why it was wrong answer
+            // Call Dialogue System to run failure text
+            DialogueSystem.Instance.PlayConversation(item.FailureDialogueFile);
         }
     }
 

@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 743244c1a94c548a782ba08d8f608303, type: 3}
+  m_Name: Pan
+  m_EditorClassIdentifier: 
+  itemName: Pan
+  description: Una baguette recien salida del horno.
+  hasGluten: 1
+  sprite: {fileID: 21300000, guid: 871badd07384e4136b8315ccbfb65596, type: 3}
+  successDialogueFile: {fileID: 4900000, guid: 620c786bb3d518bd08f887ea90a4b6c5, type: 3}
+  failureDialogueFile: {fileID: 4900000, guid: 6147d6d21c7f5888a8749301e966e615, type: 3}

@@ -18,8 +18,8 @@ MonoBehaviour:
     characterType: 1
     nameColor: {r: 0.123398006, g: 0.5566038, b: 0.14548297, a: 1}
     dialogueColor: {r: 0, g: 0, b: 0, a: 1}
-    nameFont: {fileID: 11400000, guid: 303e24d152704b8afb7068cdf8daff5f, type: 2}
-    dialogueFont: {fileID: 11400000, guid: 532aaa78513b1664c8903239fffde48f, type: 2}
+    nameFont: {fileID: 11400000, guid: e76d1f78f6ac4011dad434df4d992ae8, type: 2}
+    dialogueFont: {fileID: 11400000, guid: dd11d96664e610247a46aa217476f696, type: 2}
   - name: Luca
     alias: L
     characterType: 2
@@ -44,7 +44,7 @@ MonoBehaviour:
   - name: Frogo
     alias: F
     characterType: 2
-    nameColor: {r: 0.34718758, g: 0.8867924, b: 0.53042275, a: 1}
-    dialogueColor: {r: 0.17461729, g: 0.33962262, b: 0.31186455, a: 1}
-    nameFont: {fileID: 11400000, guid: 303e24d152704b8afb7068cdf8daff5f, type: 2}
-    dialogueFont: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
+    nameColor: {r: 0.071733706, g: 0.49056602, b: 0.21236359, a: 1}
+    dialogueColor: {r: 0, g: 0, b: 0, a: 1}
+    nameFont: {fileID: 11400000, guid: e76d1f78f6ac4011dad434df4d992ae8, type: 2}
+    dialogueFont: {fileID: 11400000, guid: dd11d96664e610247a46aa217476f696, type: 2}

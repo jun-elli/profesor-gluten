@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 2f38ec0b65f05521388de59ba0c308bb
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Sristian
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 9329f0cce1351a8aaa52f82dd8740e00, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

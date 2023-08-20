@@ -21,6 +21,13 @@ namespace Dialogue
         public delegate void DialogueSystemEvent();
         public event DialogueSystemEvent onUserPromptAdvance;
 
+        // Dialogue Panels and UI
+        [SerializeField] private GameObject _charactersLayer;
+        [SerializeField] private GameObject _dialogueLayer;
+
+        // would be nice to have another background to put on top of popups but behind characters
+
+
         private void Awake()
         {
             if (Instance == null)
@@ -86,6 +93,21 @@ namespace Dialogue
         ////////////////////////////////////
         /// Send to conversation manager ///
         /// ///////////////////////////////
+
+        // Prepare dialogue file and show dialogue container
+
+        public void PlayConversation(TextAsset file)
+        {
+            // File to strings
+            List<string> lines = FileManager.ReadTextAsset(file, false);
+
+            // Enable dialogue UI
+            _charactersLayer.SetActive(true);
+            _dialogueLayer.SetActive(true);
+
+            // Play conversation
+            Say(lines);
+        }
 
         // Send conversation to conManager
         public Coroutine Say(string speaker, string dialogue)
