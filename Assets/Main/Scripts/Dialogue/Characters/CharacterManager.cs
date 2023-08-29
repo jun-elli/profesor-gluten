@@ -38,8 +38,11 @@ namespace Dialogue.Characters
 
         public Character CreateCharacter(string characterName, bool shouldEnableOnCreation = false)
         {
+            string[] names = characterName.Split(CharacterCastingID, System.StringSplitOptions.RemoveEmptyEntries);
+            string dictName = names[0].ToLower();
+
             // Check if it already exists in manager dictionary
-            if (characters.ContainsKey(characterName.ToLower()))
+            if (characters.ContainsKey(dictName))
             {
                 Debug.LogError($"Character {characterName} already exists. Duplicate not created.");
                 return null;
@@ -111,14 +114,17 @@ namespace Dialogue.Characters
 
         public Character GetCharacter(string characterName, bool shouldCreateIfDoesNotExist = false)
         {
-            string lowName = characterName.ToLower();
+            // If character is cast "X as Y" another, it will be saved in the dictionary as X
+            string[] names = characterName.Split(CharacterCastingID, System.StringSplitOptions.RemoveEmptyEntries);
+            string lowName = names[0].ToLower();
+
             if (characters.ContainsKey(lowName))
             {
                 return characters[lowName];
             }
             else if (shouldCreateIfDoesNotExist)
             {
-                return CreateCharacter(lowName);
+                return CreateCharacter(characterName);
             }
 
             return null;

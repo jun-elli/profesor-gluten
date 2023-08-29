@@ -2,6 +2,7 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor.ProjectWindowCallback;
 
 namespace Dialogue.Commands
 {
@@ -10,6 +11,7 @@ namespace Dialogue.Commands
         new public static void Extend(CommandsDatabase database)
         {
             database.AddCommand("Wait", new Func<string, IEnumerator>(Wait));
+            database.AddCommand("End", new Action(End));
         }
 
         private static IEnumerator Wait(string data)
@@ -23,6 +25,11 @@ namespace Dialogue.Commands
             {
                 yield return new WaitForSeconds(intSeconds);
             }
+        }
+
+        private static void End()
+        {
+            DialogueSystem.Instance.HideDialogueLayers();
         }
     }
 }

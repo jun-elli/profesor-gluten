@@ -120,5 +120,14 @@ namespace Dialogue
         {
             return _conversationManager.StartConversation(conversation);
         }
+
+        // Hide VN layers
+        public void HideDialogueLayers()
+        {
+            // disable characters layer 
+            _charactersLayer.SetActive(false);
+            // disable dialogue layer
+            _dialogueLayer.SetActive(false);
+        }
     }
 }

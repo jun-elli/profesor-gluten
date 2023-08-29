@@ -143,12 +143,22 @@ namespace Dialogue.Commands
         {
             // We assume first string will be the name
             string characterName = data[0];
+            Debug.Log($"Character name is: {characterName}");
             // Chech if we have enable parameter
             var parameters = ConvertToCommandParameters(data);
             parameters.TryGetValue(EnableIdentifier, out bool shouldEnable, defaultValue: false);
+
+            // Chec we don't already have that character
+            Character c = CharacterManager.Instance.GetCharacter(characterName);
+            if (c != null)
+            {
+                Debug.Log($"Character with name is: {c.displayName} has been found, should return now outside");
+                return;
+            }
+
             // Create character
             CharacterManager.Instance.CreateCharacter(characterName, shouldEnable);
-
+            Debug.Log($"Still in CreateCharacter, will create character with name: {characterName}");
         }
         private static IEnumerator MoveCharacter(string[] data)
         {
