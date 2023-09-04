@@ -16,5 +16,5 @@ MonoBehaviour:
   description: Jugosa manzana roja, como la que comio Blancanieves
   hasGluten: 0
   sprite: {fileID: 21300000, guid: 2aa6ab62866ce4439ab7303f7da55e51, type: 3}
-  successDialogueFile: {fileID: 0}
-  failureDialogueFile: {fileID: 0}
+  successDialogueFile: {fileID: 4900000, guid: 7e02d5e7e52bdf945b7bfd3625d25dba, type: 3}
+  failureDialogueFile: {fileID: 4900000, guid: 61a5f2ce079d35ac8a0466dd627d54d5, type: 3}

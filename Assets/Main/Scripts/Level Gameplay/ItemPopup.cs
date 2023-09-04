@@ -47,19 +47,25 @@ public class ItemPopup : MonoBehaviour
         if (itemHasGluten == userAnswer)
         {
             Debug.Log("You're correct");
-            // add point
-            levelManager.SetPoints(1);
+
             // Call Dialogue System to run success text
             DialogueSystem.Instance.PlayConversation(item.SuccessDialogueFile);
+
+            // add point
+            levelManager.SetPoints(1);
         }
         else
         {
             Debug.Log("You're wrong!");
-            // subtract life
-            levelManager.SetLives(-1);
+
             // Call Dialogue System to run failure text
             DialogueSystem.Instance.PlayConversation(item.FailureDialogueFile);
+
+            // subtract life
+            levelManager.SetLives(-1);
         }
+
+        item.gameObject.SetActive(false);
     }
 
 }

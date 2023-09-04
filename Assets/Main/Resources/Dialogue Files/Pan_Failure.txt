@@ -1,9 +1,13 @@
-Profesor "Buenas tardes, celíaques de mi corazón." Saluda(mano), Come("Platano de canarias")
+CreateCharacter("Profesor as Frogo")
 
-"Igualmente profesor."
+MoveCharacter(Profesor ?x 1.5 ?y 0 ?i true)
 
-narradore "Tengo hambre!"
+enter Profesor at 1 [Frogo_surprised] "¡Uy no!"
 
-Profesor " Yo tambien \"tengo mucha\" hambre."
+Profesor "El pan está lleno de gluten."
 
-Saludar(hello, "Giraffe")
+Profesor "Es mejor que te despidas de él."
+
+Profesor "Sé que es duro, pero se puede superar."
+
+End()

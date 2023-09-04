@@ -96,7 +96,7 @@ namespace Dialogue
 
         // Prepare dialogue file and show dialogue container
 
-        public void PlayConversation(TextAsset file)
+        public Coroutine PlayConversation(TextAsset file)
         {
             // File to strings
             List<string> lines = FileManager.ReadTextAsset(file, false);
@@ -106,7 +106,7 @@ namespace Dialogue
             _dialogueLayer.SetActive(true);
 
             // Play conversation
-            Say(lines);
+            return Say(lines);
         }
 
         // Send conversation to conManager

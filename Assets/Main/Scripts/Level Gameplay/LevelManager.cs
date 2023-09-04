@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Dialogue;
 
 public class LevelManager : MonoBehaviour
 {
@@ -25,6 +26,10 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private GameObject levelOverPopup;
     private OverPopup overPopup;
 
+    // Coroutine waiting for dialogue to finish and show over popup
+    private Coroutine waitingProcess = null;
+    private bool isWaitingForDialogueToEnd => waitingProcess != null;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -44,8 +49,10 @@ public class LevelManager : MonoBehaviour
         if (Points >= levelMaxPoints)
         {
             Points = levelMaxPoints;
+
             // call win
-            overPopup.DisplayPopup(true, Points, oneStarPoints, twoStarPoints, threeStarPoints);
+            // overPopup.DisplayPopup(true, Points, oneStarPoints, twoStarPoints, threeStarPoints);
+            ShowOverPopup(true);
         }
         pointsBar.value = Points;
     }
@@ -64,7 +71,8 @@ public class LevelManager : MonoBehaviour
         {
             Lives = 0;
             // call game over
-            overPopup.DisplayPopup(false, Points, oneStarPoints, twoStarPoints, threeStarPoints);
+            // overPopup.DisplayPopup(false, Points, oneStarPoints, twoStarPoints, threeStarPoints);
+            ShowOverPopup(false);
         }
         if (Lives > levelMaxLives)
         {
@@ -89,5 +97,31 @@ public class LevelManager : MonoBehaviour
     public void ReturnToLevels()
     {
         Debug.Log("Level over, return to level selection screen.");
+    }
+
+    private Coroutine ShowOverPopup(bool hasUserWon)
+    {
+        StopWaitingProcess();
+
+        waitingProcess = StartCoroutine(WaitForDialogueEndToShowOverPopup(hasUserWon));
+
+        return waitingProcess;
+    }
+
+    private IEnumerator WaitForDialogueEndToShowOverPopup(bool hasUserWon)
+    {
+        while (DialogueSystem.Instance.isRunningConversation)
+        {
+            yield return null;
+        }
+        overPopup.DisplayPopup(hasUserWon, Points, oneStarPoints, twoStarPoints, threeStarPoints);
+    }
+
+    private void StopWaitingProcess()
+    {
+        if (isWaitingForDialogueToEnd)
+        {
+            StopCoroutine(waitingProcess);
+        }
     }
 }

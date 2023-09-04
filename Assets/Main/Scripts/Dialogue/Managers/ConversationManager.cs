@@ -81,6 +81,7 @@ namespace Dialogue
                     CommandsManager.Instance.StopAllProcesses();
                 }
             }
+            StopConversation();
         }
         IEnumerator RunDialogue(DialogueLine line)
         {

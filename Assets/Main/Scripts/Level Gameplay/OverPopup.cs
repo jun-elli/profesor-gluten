@@ -8,11 +8,7 @@ using UnityEngine.SceneManagement;
 public class OverPopup : MonoBehaviour
 {
 
-    [SerializeField] private GameObject levelManager;
-    private LevelManager manager;
-
-    [SerializeField] private GameObject scoreDisplay;
-    private ScoreDisplay display;
+    [SerializeField] private ScoreDisplay display;
 
 
     [SerializeField] private TextMeshProUGUI titleText;
@@ -23,8 +19,6 @@ public class OverPopup : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        manager = levelManager.GetComponent<LevelManager>();
-        display = scoreDisplay.GetComponent<ScoreDisplay>();
         titleText.text = SceneManager.GetActiveScene().name;
     }
 
