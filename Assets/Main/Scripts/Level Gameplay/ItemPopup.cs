@@ -64,8 +64,11 @@ public class ItemPopup : MonoBehaviour
             // subtract life
             levelManager.SetLives(-1);
         }
-
+        // Disable items
         item.gameObject.SetActive(false);
+        // If there are no items left to click, end level
+        levelManager.CheckForActiveItemsOnScene();
+
     }
 
 }

@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Dialogue;
+using Level.Items;
+using System.Linq;
 
 public class LevelManager : MonoBehaviour
 {
@@ -17,24 +19,25 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private int twoStarPoints;
     [SerializeField] private int threeStarPoints;
 
+    [SerializeField] private List<Item> items;
+
     // display points and lives
     [SerializeField] private TextMeshProUGUI livesText;
-    [SerializeField] private GameObject pointsDisplay;
-    private Slider pointsBar;
+    [SerializeField] private Slider pointsBar;
 
     // level over popup
-    [SerializeField] private GameObject levelOverPopup;
-    private OverPopup overPopup;
+    [SerializeField] private OverPopup overPopup;
 
     // Coroutine waiting for dialogue to finish and show over popup
     private Coroutine waitingProcess = null;
     private bool isWaitingForDialogueToEnd => waitingProcess != null;
 
+    // Constants
+    private const string LivesText = "Intentos: ";
+
     // Start is called before the first frame update
     void Start()
     {
-        pointsBar = pointsDisplay.GetComponent<Slider>();
-        overPopup = levelOverPopup.GetComponent<OverPopup>();
         ResetLevel();
     }
 
@@ -55,6 +58,9 @@ public class LevelManager : MonoBehaviour
             ShowOverPopup(true);
         }
         pointsBar.value = Points;
+
+        // Check if there are still items actives
+
     }
 
     private void ResetPoints()
@@ -79,25 +85,39 @@ public class LevelManager : MonoBehaviour
             Lives = levelMaxLives;
             Debug.LogError("can't have more lives");
         }
-        livesText.text = "Lives: " + Lives;
+        livesText.text = LivesText + Lives;
+
+        // Check if there are still items actives 
     }
     private void ResetLives()
     {
         Lives = levelMaxLives;
-        livesText.text = "Lives: " + Lives;
+        livesText.text = LivesText + Lives;
     }
 
     private void ResetLevel()
     {
         ResetPoints();
         ResetLives();
-        levelOverPopup.SetActive(false);
+        overPopup.gameObject.SetActive(false);
     }
 
     public void ReturnToLevels()
     {
         Debug.Log("Level over, return to level selection screen.");
     }
+
+    // Check if there are still active items on scene
+
+    public void CheckForActiveItemsOnScene()
+    {
+        if (items.All(i => !i.isActiveAndEnabled))
+        {
+            ShowOverPopup(false);
+        }
+    }
+
+    // ////// Handle Running dialogue and wait to show game over popup //////
 
     private Coroutine ShowOverPopup(bool hasUserWon)
     {
