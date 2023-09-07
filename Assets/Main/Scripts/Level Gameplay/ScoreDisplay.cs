@@ -20,6 +20,7 @@ public class ScoreDisplay : MonoBehaviour
 
     }
 
+    public void ShowScore(GameOverInformation information) => ShowScore(information.points, information.oneStarPoints, information.twoStarPoints, information.threeStarPoints);
     public void ShowScore(int score, int oneStarPoints, int twoStarPoints, int threeStarPoints)
     {
         // set inactive all stars and active all dots to begin with

@@ -114,7 +114,8 @@ public class LevelManager : MonoBehaviour
         {
             yield return null;
         }
-        overPopup.DisplayPopup(hasUserWon, Points, oneStarPoints, twoStarPoints, threeStarPoints);
+        GameOverInformation information = new(hasUserWon, Points, oneStarPoints, twoStarPoints, threeStarPoints);
+        overPopup.DisplayPopup(information);
     }
 
     private void StopWaitingProcess()
@@ -123,5 +124,24 @@ public class LevelManager : MonoBehaviour
         {
             StopCoroutine(waitingProcess);
         }
+    }
+
+}
+
+public readonly struct GameOverInformation
+{
+    public readonly bool hasUserWon;
+    public readonly int points;
+    public readonly int oneStarPoints;
+    public readonly int twoStarPoints;
+    public readonly int threeStarPoints;
+
+    public GameOverInformation(bool hasUserWon, int points, int oneStarPoints, int twoStarPoints, int threeStarPoints)
+    {
+        this.hasUserWon = hasUserWon;
+        this.points = points;
+        this.oneStarPoints = oneStarPoints;
+        this.twoStarPoints = twoStarPoints;
+        this.threeStarPoints = threeStarPoints;
     }
 }

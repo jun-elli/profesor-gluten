@@ -22,12 +22,12 @@ public class OverPopup : MonoBehaviour
         titleText.text = SceneManager.GetActiveScene().name;
     }
 
-    public void DisplayPopup(bool hasWon, int score, int oneStarPoints, int twoStarPoints, int threeStarPoints)
+    public void DisplayPopup(GameOverInformation information)
     {
         // set win or lose message
-        SetResultMessage(hasWon);
+        SetResultMessage(information.hasUserWon);
         // show stars
-        display.ShowScore(score, oneStarPoints, twoStarPoints, threeStarPoints);
+        display.ShowScore(information);
         // set active
         gameObject.SetActive(true);
     }
