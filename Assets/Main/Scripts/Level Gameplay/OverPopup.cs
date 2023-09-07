@@ -14,6 +14,8 @@ public class OverPopup : MonoBehaviour
     [SerializeField] private TextMeshProUGUI titleText;
     [SerializeField] private TextMeshProUGUI resultText;
 
+    [SerializeField] private AudioSource audioSource;
+
     private const string ThreeStarsMessage = "¡Tienes el gluten controlado!";
     private const string TwoStarsMessage = "¡Casi lo tenías!";
     private const string OneStarMessage = "¡No pasa nada, sigue buscando!";
@@ -32,8 +34,12 @@ public class OverPopup : MonoBehaviour
         SetResultMessage(information);
         // show stars
         display.ShowScore(information);
+
         // set active
         gameObject.SetActive(true);
+
+        // play sfw
+        audioSource.Play();
     }
 
     private void SetResultMessage(GameOverInformation information)
