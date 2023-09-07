@@ -10,6 +10,7 @@ using System.Linq;
 public class LevelManager : MonoBehaviour
 {
     // Level vars
+    [SerializeField] private string levelName;
     public int Points { get; private set; }
     public int Lives { get; private set; }
     [SerializeField] private int levelMaxPoints;
@@ -134,7 +135,7 @@ public class LevelManager : MonoBehaviour
         {
             yield return null;
         }
-        GameOverInformation information = new(hasUserWon, Points, oneStarPoints, twoStarPoints, threeStarPoints);
+        GameOverInformation information = new(hasUserWon, Points, oneStarPoints, twoStarPoints, threeStarPoints, levelName);
         overPopup.DisplayPopup(information);
     }
 
@@ -155,13 +156,15 @@ public readonly struct GameOverInformation
     public readonly int oneStarPoints;
     public readonly int twoStarPoints;
     public readonly int threeStarPoints;
+    public readonly string levelName;
 
-    public GameOverInformation(bool hasUserWon, int points, int oneStarPoints, int twoStarPoints, int threeStarPoints)
+    public GameOverInformation(bool hasUserWon, int points, int oneStarPoints, int twoStarPoints, int threeStarPoints, string levelName)
     {
         this.hasUserWon = hasUserWon;
         this.points = points;
         this.oneStarPoints = oneStarPoints;
         this.twoStarPoints = twoStarPoints;
         this.threeStarPoints = threeStarPoints;
+        this.levelName = levelName;
     }
 }

@@ -21,11 +21,13 @@ public class OverPopup : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        titleText.text = SceneManager.GetActiveScene().name;
+
     }
 
     public void DisplayPopup(GameOverInformation information)
     {
+        // set level name
+        titleText.text = information.levelName;
         // set win or lose message
         SetResultMessage(information);
         // show stars
