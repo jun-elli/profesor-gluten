@@ -45,11 +45,11 @@ public class OverPopup : MonoBehaviour
     private void SetResultMessage(GameOverInformation information)
     {
 
-        if (information.hasUserWon)
+        if (information.points == information.threeStarPoints)
         {
             resultText.text = ThreeStarsMessage;
         }
-        else if (!information.hasUserWon && information.points >= information.twoStarPoints)
+        else if (information.points >= information.twoStarPoints)
         {
             resultText.text = TwoStarsMessage;
         }

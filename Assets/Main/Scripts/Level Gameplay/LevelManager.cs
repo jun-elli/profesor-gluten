@@ -6,6 +6,7 @@ using TMPro;
 using Dialogue;
 using Level.Items;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
@@ -36,6 +37,9 @@ public class LevelManager : MonoBehaviour
     // Constants
     private const string LivesText = "Intentos: ";
 
+    // Scene management
+    [SerializeField] private int _titleSceneIndex;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -56,7 +60,7 @@ public class LevelManager : MonoBehaviour
 
             // call win
             // overPopup.DisplayPopup(true, Points, oneStarPoints, twoStarPoints, threeStarPoints);
-            ShowOverPopup(true);
+            ShowOverPopup();
         }
         pointsBar.value = Points;
 
@@ -79,7 +83,7 @@ public class LevelManager : MonoBehaviour
             Lives = 0;
             // call game over
             // overPopup.DisplayPopup(false, Points, oneStarPoints, twoStarPoints, threeStarPoints);
-            ShowOverPopup(false);
+            ShowOverPopup();
         }
         if (Lives > levelMaxLives)
         {
@@ -105,7 +109,7 @@ public class LevelManager : MonoBehaviour
 
     public void ReturnToLevels()
     {
-        Debug.Log("Level over, return to level selection screen.");
+        SceneManager.LoadScene(_titleSceneIndex);
     }
 
     // Check if there are still active items on scene
@@ -114,28 +118,28 @@ public class LevelManager : MonoBehaviour
     {
         if (items.All(i => !i.isActiveAndEnabled))
         {
-            ShowOverPopup(false);
+            ShowOverPopup();
         }
     }
 
     // ////// Handle Running dialogue and wait to show game over popup //////
 
-    private Coroutine ShowOverPopup(bool hasUserWon)
+    private Coroutine ShowOverPopup()
     {
         StopWaitingProcess();
 
-        waitingProcess = StartCoroutine(WaitForDialogueEndToShowOverPopup(hasUserWon));
+        waitingProcess = StartCoroutine(WaitForDialogueEndToShowOverPopup());
 
         return waitingProcess;
     }
 
-    private IEnumerator WaitForDialogueEndToShowOverPopup(bool hasUserWon)
+    private IEnumerator WaitForDialogueEndToShowOverPopup()
     {
         while (DialogueSystem.Instance.isRunningConversation)
         {
             yield return null;
         }
-        GameOverInformation information = new(hasUserWon, Points, oneStarPoints, twoStarPoints, threeStarPoints, levelName);
+        GameOverInformation information = new(Points, oneStarPoints, twoStarPoints, threeStarPoints, levelName);
         overPopup.DisplayPopup(information);
     }
 
@@ -151,16 +155,14 @@ public class LevelManager : MonoBehaviour
 
 public readonly struct GameOverInformation
 {
-    public readonly bool hasUserWon;
     public readonly int points;
     public readonly int oneStarPoints;
     public readonly int twoStarPoints;
     public readonly int threeStarPoints;
     public readonly string levelName;
 
-    public GameOverInformation(bool hasUserWon, int points, int oneStarPoints, int twoStarPoints, int threeStarPoints, string levelName)
+    public GameOverInformation(int points, int oneStarPoints, int twoStarPoints, int threeStarPoints, string levelName)
     {
-        this.hasUserWon = hasUserWon;
         this.points = points;
         this.oneStarPoints = oneStarPoints;
         this.twoStarPoints = twoStarPoints;
