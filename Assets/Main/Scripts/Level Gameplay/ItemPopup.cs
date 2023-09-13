@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using Level.Items;
+using Level.CustomSO;
 using Dialogue;
 
 public class ItemPopup : MonoBehaviour

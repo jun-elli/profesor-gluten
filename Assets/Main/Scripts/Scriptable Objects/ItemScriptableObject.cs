@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Level.Items
+namespace Level.CustomSO
 {
     [CreateAssetMenu(fileName = "New Item", menuName = "Custom SO/Item")]
     public class ItemScriptableObject : ScriptableObject

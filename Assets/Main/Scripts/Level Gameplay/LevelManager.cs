@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Dialogue;
-using Level.Items;
+using Level.CustomSO;
 using System.Linq;
 using UnityEngine.SceneManagement;
 

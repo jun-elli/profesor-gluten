@@ -1,10 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
-using Level.Items;
+using Level.CustomSO;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Level.Items
+namespace Level.CustomSO
 {
     public class Item : MonoBehaviour
     {
