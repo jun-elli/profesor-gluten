@@ -5700,6 +5700,7 @@ MonoBehaviour:
   livesText: {fileID: 1237290213}
   pointsBar: {fileID: 1422938926}
   overPopup: {fileID: 1639796359}
+  chooseLevelSceneIndex: 1
 --- !u!4 &2070196486
 Transform:
   m_ObjectHideFlags: 0

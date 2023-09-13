@@ -38,7 +38,7 @@ public class LevelManager : MonoBehaviour
     private const string LivesText = "Intentos: ";
 
     // Scene management
-    [SerializeField] private int _titleSceneIndex;
+    [SerializeField] private int chooseLevelSceneIndex;
 
     // Start is called before the first frame update
     void Start()
@@ -109,7 +109,7 @@ public class LevelManager : MonoBehaviour
 
     public void ReturnToLevels()
     {
-        SceneManager.LoadScene(_titleSceneIndex);
+        SceneManager.LoadScene(chooseLevelSceneIndex);
     }
 
     // Check if there are still active items on scene

@@ -2,6 +2,7 @@
 using Level.CustomSO;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Level
@@ -9,7 +10,7 @@ namespace Level
     public class LevelThumbnail : MonoBehaviour
     {
         // Information from SO
-        [SerializeField] private LevelInfoSO info;
+        private LevelInfoSO info;
 
         private string sceneName;
         private int number;
@@ -17,7 +18,7 @@ namespace Level
         private Sprite image;
 
         // Level state
-        private bool isLocked = false;
+        private bool isLocked = true;
         private bool isCompleted => maxStarsUserHasAchieved >= 3;
         private int maxStarsUserHasAchieved = 0;
 
@@ -30,14 +31,16 @@ namespace Level
 
         private void Start()
         {
-            SetLevelThumbnail();
         }
 
-        private void SetLevelThumbnail()
+        public void SetLevelThumbnail(LevelInfoSO levelInfoSO)
         {
+            info = levelInfoSO;
+
             SetLevelInfoFromSO();
 
             // Set info from saved data
+            SetUserProgressOnLevel();
 
             // Set visuals
             SetUI();
@@ -45,10 +48,24 @@ namespace Level
 
         private void SetLevelInfoFromSO()
         {
-            sceneName = info.sceneName;
-            title = info.title;
-            number = info.number;
-            image = info.image;
+            if (info != null)
+            {
+                sceneName = info.sceneName;
+                title = info.title;
+                number = info.number;
+                image = info.image;
+            }
+            if (number == 1)
+            {
+                isLocked = false;
+            }
+        }
+
+        private void SetUserProgressOnLevel()
+        {
+            // not implemented
+
+            // check if previous level is completed to unlock this one
         }
 
         private void SetUI()
@@ -66,6 +83,15 @@ namespace Level
             lockedPanel.SetActive(isLocked);
         }
 
+        public void HandlePlayButtonClick()
+        {
+            // Save data
+            // save which page we're at
+
+
+            // load scene
+            SceneManager.LoadScene(sceneName);
+        }
     }
 }
 
