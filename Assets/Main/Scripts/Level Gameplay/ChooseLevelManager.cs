@@ -2,8 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Level.CustomSO;
+using SavableData;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Level
@@ -23,6 +25,7 @@ namespace Level
         // No need to expose it, maybe best as attribute
         public int PageNumber { get; private set; }
         private const int LEVELS_X_PAGE = 2;
+        [SerializeField] private int titleSceneIndex = 0;
 
 
         private void Awake()
@@ -41,16 +44,17 @@ namespace Level
         // Start is called before the first frame update
         void Start()
         {
-            SetPageNumber();
-            SetPage(PageNumber);
+            SetPageNumberFromSavedData();
+            SetPageContents(PageNumber);
+            AudioManager.Instance.PlayMainTheme();
         }
 
-        private void SetPageNumber()
+        private void SetPageNumberFromSavedData()
         {
-            PageNumber = 1;
+            PageNumber = SaveDataManager.SavedUserData.lastPageVisited;
         }
 
-        private void SetPage(int pageNumber)
+        private void SetPageContents(int pageNumber)
         {
             // Set left level //
 
@@ -174,7 +178,7 @@ namespace Level
             }
 
             PageNumber--;
-            SetPage(PageNumber);
+            SetPageContents(PageNumber);
         }
 
         private void HandleNextArrowClick()
@@ -189,7 +193,12 @@ namespace Level
             }
 
             PageNumber++;
-            SetPage(PageNumber);
+            SetPageContents(PageNumber);
+        }
+
+        public void HandleReturnArrowClick()
+        {
+            SceneManager.LoadScene(titleSceneIndex);
         }
     }
 }

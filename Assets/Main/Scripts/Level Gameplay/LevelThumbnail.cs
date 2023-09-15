@@ -1,5 +1,6 @@
 
 using Level.CustomSO;
+using SavableData;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -48,7 +49,12 @@ namespace Level
 
         private void SetLevelInfoFromSO()
         {
-            if (info != null)
+            if (info == null)
+            {
+                Debug.LogError("No level SO found.");
+                return;
+            }
+            else
             {
                 sceneName = info.sceneName;
                 title = info.title;
@@ -63,9 +69,12 @@ namespace Level
 
         private void SetUserProgressOnLevel()
         {
-            // not implemented
+            SaveDataManager.LevelData level = SaveDataManager.SavedUserData.levelsProgress.Find(l => l.number == number);
 
-            // check if previous level is completed to unlock this one
+            if (level != null)
+            {
+                maxStarsUserHasAchieved = level.maxStarsUserHasAchieved;
+            }
         }
 
         private void SetUI()
@@ -79,15 +88,27 @@ namespace Level
             // stars
             starsDisplay.SetStars(maxStarsUserHasAchieved);
 
-            // Locked panel
+            // check if previous level is completed to unlock this one
+            CheckIfPreviousLevelIsCompleted();
             lockedPanel.SetActive(isLocked);
+        }
+
+        private void CheckIfPreviousLevelIsCompleted()
+        {
+            if (number > 1)
+            {
+                SaveDataManager.LevelData previousLevel = SaveDataManager.SavedUserData.levelsProgress.Find(l => l.number == number - 1);
+
+                isLocked = previousLevel == null || !previousLevel.isCompleted;
+            }
+
         }
 
         public void HandlePlayButtonClick()
         {
-            // Save data
-            // save which page we're at
-
+            // Save which page we're at
+            int page = ChooseLevelManager.Instance.PageNumber;
+            SaveDataManager.Instance.SetLastPageVisited(page);
 
             // load scene
             SceneManager.LoadScene(sceneName);

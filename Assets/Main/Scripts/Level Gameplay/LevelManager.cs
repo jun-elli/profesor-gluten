@@ -7,11 +7,14 @@ using Dialogue;
 using Level.CustomSO;
 using System.Linq;
 using UnityEngine.SceneManagement;
+using SavableData;
+using Level;
 
 public class LevelManager : MonoBehaviour
 {
     // Level vars
     [SerializeField] private string levelName;
+    [SerializeField] private int levelNumber;
     public int Points { get; private set; }
     public int Lives { get; private set; }
     [SerializeField] private int levelMaxPoints;
@@ -44,6 +47,7 @@ public class LevelManager : MonoBehaviour
     void Start()
     {
         ResetLevel();
+        AudioManager.Instance.StopMainTheme();
     }
 
     public void SetPoints(int pointsToAdd)
@@ -91,8 +95,6 @@ public class LevelManager : MonoBehaviour
             Debug.LogError("can't have more lives");
         }
         livesText.text = LivesText + Lives;
-
-        // Check if there are still items actives 
     }
     private void ResetLives()
     {
@@ -109,7 +111,14 @@ public class LevelManager : MonoBehaviour
 
     public void ReturnToLevels()
     {
+        SaveLevelOutcome();
         SceneManager.LoadScene(chooseLevelSceneIndex);
+    }
+
+    private void SaveLevelOutcome()
+    {
+        SaveDataManager.Instance.SetLevelProgress(levelNumber, levelName, Points);
+        SaveDataManager.Instance.SaveCurrentUserData();
     }
 
     // Check if there are still active items on scene
