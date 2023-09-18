@@ -1,0 +1,11 @@
+CreateCharacter("Profesor as Frogo")
+
+MoveCharacter(Profesor ?x 1.5 ?y 0 ?i true)
+
+enter Profesor at 1 [Frogo_surprised] "¡Uy no! Te has equivocado."
+
+Profesor "La manzana no tiene gluten."
+
+Profesor "Te la puedes comer sin miedo."
+
+End()

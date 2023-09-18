@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 743244c1a94c548a782ba08d8f608303, type: 3}
+  m_Name: Queso
+  m_EditorClassIdentifier: 
+  itemName: Queso
+  description: Trozo semi-curado
+  hasGluten: 0
+  sprite: {fileID: 21300000, guid: 3ba5a88a0508a488a85c30169a8e18de, type: 3}
+  successDialogueFile: {fileID: 4900000, guid: c59a40334ede6cd92aa2eb6d3d48e4d4, type: 3}
+  failureDialogueFile: {fileID: 4900000, guid: da657867b5b2769be853135e634318ec, type: 3}

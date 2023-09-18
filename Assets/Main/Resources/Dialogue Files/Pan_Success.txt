@@ -1,0 +1,9 @@
+CreateCharacter("Profesor as Frogo")
+
+MoveCharacter(Profesor ?x 1.5 ?y 0 ?i true)
+
+enter Profesor at 1 [Frogo_happy] "¡Correctíssimo!"
+
+Profesor "El pan es nuestro mortal enemigo."
+
+End()

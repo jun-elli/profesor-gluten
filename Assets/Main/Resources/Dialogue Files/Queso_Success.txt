@@ -1,0 +1,15 @@
+CreateCharacter("Profesor as Frogo")
+
+MoveCharacter(Profesor ?x 1.5 ?y 0 ?i true)
+
+enter Profesor at 1 [Frogo_happy] "¡Correctíssimo!"
+
+Profesor "El queso no tiene gluten."
+
+Profesor "Aun así, hay que mirar bien que no tenga trazas."
+
+Profesor "Podría ser que en el mismo sitio también hicieran galletas,"
+
+Profesor "y que un trocito saliera volando hasta el queso."
+
+End()
